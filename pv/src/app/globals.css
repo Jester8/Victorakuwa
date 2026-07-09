@@ -1,0 +1,63 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #0a0a0a;
+  --muted: #6b6b6b;
+  --line: #e5e5e5;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --font-sans: var(--font-manrope);
+}
+
+html.lenis {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-manrope), sans-serif;
+}
+
+::selection {
+  background: #0a0a0a;
+  color: #ffffff;
+}
+
+.container-px {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+@media (min-width: 1024px) {
+  .container-px {
+    padding-left: 4rem;
+    padding-right: 4rem;
+  }
+}
+
+.typewriter-cursor {
+  display: inline-block;
+  width: 0.09em;
+  height: 0.85em;
+  margin-left: 0.05em;
+  background: currentColor;
+  vertical-align: -0.1em;
+  animation: typewriter-blink 0.9s step-start infinite;
+}
+
+@keyframes typewriter-blink {
+  50% {
+    opacity: 0;
+  }
+}
