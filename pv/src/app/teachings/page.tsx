@@ -30,13 +30,13 @@ export default function Teachings() {
         </Reveal>
 
         <Reveal delay={0.08}>
-          <div className="relative mx-auto aspect-[4/3] w-full max-w-xl overflow-hidden border border-line bg-foreground/[0.03] md:ml-auto">
+          <div className="relative mx-auto aspect-[4/5] w-full max-w-xl overflow-hidden border border-line bg-foreground/[0.03] md:ml-auto">
             <Image
               src="/photos/IMG_8141.webp"
               alt="Pastor Victor Akuwa reading and making notes at his desk."
               fill
               sizes="(min-width: 1024px) 38vw, (min-width: 768px) 42vw, 100vw"
-              className="object-cover object-top"
+              className="object-cover"
             />
           </div>
         </Reveal>
