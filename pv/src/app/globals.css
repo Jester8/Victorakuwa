@@ -45,48 +45,27 @@ body {
 
 .book-carousel-viewport {
   align-items: stretch;
-  scroll-snap-type: x mandatory;
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
 }
 
 .book-carousel-viewport::-webkit-scrollbar {
   display: none;
 }
 
+.book-carousel-group {
+  width: max-content;
+}
+
 .book-carousel-slide {
-  flex: 0 0 86%;
-  scroll-snap-align: start;
+  flex: 0 0 var(--book-carousel-slide-width, 82vw);
 }
 
 .book-carousel-featured {
   width: 100%;
-  max-width: 56rem;
+  max-width: 48rem;
   margin-inline: auto;
-}
-
-.book-carousel-featured .book-carousel-slide {
-  flex-basis: 86%;
-}
-
-@media (min-width: 640px) {
-  .book-carousel-slide {
-    flex-basis: 48%;
-  }
-
-  .book-carousel-featured .book-carousel-slide {
-    flex-basis: 72%;
-  }
-}
-
-@media (min-width: 1024px) {
-  .book-carousel-slide {
-    flex-basis: calc((100% - 2rem) / 3);
-  }
-
-  .book-carousel-featured .book-carousel-slide {
-    flex-basis: 70%;
-  }
 }
 
 .typewriter-cursor {
