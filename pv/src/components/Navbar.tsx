@@ -41,44 +41,8 @@ export default function Navbar() {
         <Link
           href="/"
           aria-label="Pastor Victor Akuwa home"
-          className="group inline-flex items-center gap-3 text-foreground"
+          className="inline-flex items-center text-foreground"
         >
-          <svg
-            viewBox="0 0 52 52"
-            aria-hidden="true"
-            className="size-11 shrink-0 transition-transform duration-300 group-hover:-rotate-3 group-hover:scale-[1.04]"
-          >
-            <circle cx="26" cy="26" r="25" fill="currentColor" />
-            <circle
-              cx="26"
-              cy="26"
-              r="21"
-              fill="none"
-              stroke="var(--background)"
-              strokeOpacity=".42"
-              strokeWidth=".8"
-            />
-            <text
-              x="26"
-              y="32.5"
-              textAnchor="middle"
-              fill="var(--background)"
-              fontFamily="'Bodoni 72', Didot, Georgia, serif"
-              fontSize="21"
-              fontWeight="600"
-              letterSpacing="-1.8"
-            >
-              PV
-            </text>
-            <path
-              d="M19 38h14"
-              stroke="var(--background)"
-              strokeOpacity=".62"
-              strokeWidth=".8"
-              strokeLinecap="round"
-            />
-            <circle cx="26" cy="41" r=".8" fill="var(--background)" />
-          </svg>
           <span className="text-sm font-semibold tracking-tight sm:text-base">
             Pastor Victor Akuwa
           </span>

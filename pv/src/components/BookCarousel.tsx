@@ -154,7 +154,7 @@ export default function BookCarousel({
           className={`relative block overflow-hidden bg-foreground/[0.03] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-foreground ${
             variant === "featured"
               ? "aspect-[3/4] w-[34%] max-w-36 shrink-0 sm:w-[32%]"
-              : "aspect-square w-full"
+              : "aspect-[4/5] w-full"
           }`}
           aria-label={`Read about ${title}`}
         >
@@ -167,7 +167,9 @@ export default function BookCarousel({
                 ? "(min-width: 640px) 144px, 34vw"
                 : "(min-width: 1024px) 16vw, (min-width: 640px) 32vw, 56vw"
             }
-            className="object-contain p-1 transition-transform duration-500 hover:scale-[1.03]"
+            className={`object-contain transition-transform duration-500 hover:scale-[1.03] ${
+              variant === "featured" ? "p-1" : "p-0"
+            }`}
           />
         </Link>
 
@@ -181,7 +183,7 @@ export default function BookCarousel({
             className={`text-xl font-bold leading-snug tracking-tight ${
               variant === "featured"
                 ? "mt-2 sm:mt-3 sm:text-2xl"
-                : "mt-2 min-h-[3.5rem] text-sm sm:text-base"
+                : "mt-2 text-sm sm:text-base"
             }`}
           >
             <Link
@@ -192,7 +194,11 @@ export default function BookCarousel({
               {title}
             </Link>
           </h3>
-          <div className="mt-auto flex min-h-7 flex-wrap gap-x-2 gap-y-1 pt-1.5">
+          <div
+            className={`flex min-h-7 flex-wrap gap-x-2 gap-y-1 pt-1.5 ${
+              variant === "featured" ? "mt-auto" : "mt-2"
+            }`}
+          >
             <a
               href={href}
               target="_blank"

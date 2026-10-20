@@ -1,12 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import {
-  ArrowLeft,
-  ArrowRight,
-  Pause,
-  Play,
-} from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useEffect, useState, type ReactNode } from "react";
 
@@ -31,23 +26,17 @@ const slides = [
 
 export default function HeroCarousel({ children }: { children: ReactNode }) {
   const [activeSlide, setActiveSlide] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false);
   const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
-    if (prefersReducedMotion === false) setIsPlaying(true);
-    if (prefersReducedMotion === true) setIsPlaying(false);
-  }, [prefersReducedMotion]);
-
-  useEffect(() => {
-    if (!isPlaying || prefersReducedMotion) return;
+    if (prefersReducedMotion !== false) return;
 
     const timer = window.setInterval(() => {
       setActiveSlide((current) => (current + 1) % slides.length);
     }, 7000);
 
     return () => window.clearInterval(timer);
-  }, [isPlaying, prefersReducedMotion]);
+  }, [prefersReducedMotion]);
 
   const showSlide = (index: number) => {
     setActiveSlide((index + slides.length) % slides.length);
@@ -58,8 +47,6 @@ export default function HeroCarousel({ children }: { children: ReactNode }) {
       aria-label="Featured photographs"
       aria-roledescription="carousel"
       className="relative flex h-[88svh] min-h-[560px] max-h-[860px] w-full items-end overflow-hidden bg-background"
-      onMouseEnter={() => setIsPlaying(false)}
-      onFocusCapture={() => setIsPlaying(false)}
     >
       <div className="absolute inset-0" aria-live="off">
         <AnimatePresence initial={false} mode="wait">
@@ -123,14 +110,6 @@ export default function HeroCarousel({ children }: { children: ReactNode }) {
               className="flex h-10 w-10 items-center justify-center rounded-full border border-white/60 bg-black/65 text-white transition-colors hover:bg-black/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
             >
               <ArrowLeft size={17} />
-            </button>
-            <button
-              type="button"
-              aria-label={isPlaying ? "Pause slides" : "Play slides"}
-              onClick={() => setIsPlaying((playing) => !playing)}
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-white/60 bg-black/65 text-white transition-colors hover:bg-black/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-            >
-              {isPlaying ? <Pause size={16} /> : <Play size={16} />}
             </button>
             <button
               type="button"
