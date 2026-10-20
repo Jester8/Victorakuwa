@@ -5,7 +5,7 @@ import Reveal from "@/components/Reveal";
 import TypewriterHeading from "@/components/TypewriterHeading";
 import HeroCarousel from "@/components/HeroCarousel";
 import BookCarousel from "@/components/BookCarousel";
-import { latestBooks } from "@/data/books";
+import { books, latestBooks } from "@/data/books";
 
 const roles = [
   {
@@ -154,37 +154,49 @@ export default function Home() {
       </section>
 
       {/* Books preview */}
-      <section className="container-px py-20 sm:py-28">
-        <div className="flex flex-col items-center gap-12 md:flex-row-reverse md:gap-16">
-          <Reveal className="w-full md:w-2/5">
-            <div className="relative aspect-[4/5] w-full overflow-hidden rounded-2xl border border-line bg-background shadow-sm md:max-w-xs">
-              <div className="relative h-full overflow-hidden">
-                <Image
-                  src="/books/wisdom-through-faith.webp"
-                  alt="Wisdom Through Faith book cover by Victor Akuwa."
-                  fill
-                  sizes="(min-width: 768px) 40vw, 100vw"
-                  className="object-contain p-2 transition-transform duration-700 hover:scale-[1.03]"
-                />
-              </div>
+      <section className="relative isolate overflow-hidden border-y border-line bg-neutral-950 text-white">
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 grid grid-cols-2 grid-rows-4 sm:grid-cols-4 sm:grid-rows-2"
+        >
+          {books.map((book, index) => (
+            <div
+              key={book.slug}
+              className={`relative overflow-hidden ${
+                index % 2 === 0 ? "sm:-translate-y-3" : "sm:translate-y-3"
+              }`}
+            >
+              <Image
+                src={book.cover}
+                alt=""
+                fill
+                sizes="(min-width: 640px) 25vw, 50vw"
+                className="scale-110 object-cover object-center opacity-70 blur-[1px]"
+              />
             </div>
-          </Reveal>
+          ))}
+        </div>
+        <div className="absolute inset-0 bg-black/50" aria-hidden="true" />
+        <div
+          className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/20 to-black/50"
+          aria-hidden="true"
+        />
 
-          <Reveal delay={0.1} className="w-full md:w-3/5">
-            <p className="text-sm font-semibold uppercase tracking-widest text-muted">
+        <div className="container-px relative flex min-h-[32rem] items-center py-20 sm:min-h-[36rem] sm:py-28">
+          <Reveal className="max-w-3xl">
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-white/75">
               Books
             </p>
-            <h2 className="mt-4 text-3xl font-semibold tracking-tight sm:text-4xl">
+            <h2 className="mt-5 text-4xl font-semibold leading-tight tracking-tight text-white sm:text-5xl lg:text-6xl">
               Biblical truth made simple, practical, and accessible.
             </h2>
-            <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted">
-              As the author of several books, PV helps believers develop
-              strong Christian foundations and mature in their walk with
-              God.
+            <p className="mt-6 max-w-2xl text-lg leading-relaxed text-white/85 sm:text-xl">
+              As the author of several books, PV helps believers develop strong
+              Christian foundations and mature in their walk with God.
             </p>
             <Link
               href="/books"
-              className="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-foreground"
+              className="mt-9 inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-sm font-semibold text-neutral-950 transition-transform hover:-translate-y-0.5"
             >
               Explore his books
               <ArrowRight size={16} />
