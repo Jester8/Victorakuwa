@@ -83,7 +83,7 @@ export default function Home() {
       {/* About preview */}
       <section className="container-px py-20 sm:py-28">
         <div className="flex flex-col items-center gap-12 md:flex-row md:gap-16">
-          <Reveal className="w-full md:w-2/5">
+          <Reveal className="order-2 w-full md:order-1 md:w-2/5">
             <div className="relative aspect-[4/5] w-full overflow-hidden rounded-2xl border border-line bg-background shadow-sm md:max-w-xs">
               <div className="relative h-full overflow-hidden">
                 <Image
@@ -97,7 +97,7 @@ export default function Home() {
             </div>
           </Reveal>
 
-          <Reveal delay={0.1} className="w-full md:w-3/5">
+          <Reveal delay={0.1} className="order-1 w-full md:order-2 md:w-3/5">
             <p className="text-sm font-semibold uppercase tracking-widest text-muted">
               About PV
             </p>

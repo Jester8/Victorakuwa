@@ -1,12 +1,15 @@
 import Image from "next/image";
 import { ArrowUpRight, Music2 } from "lucide-react";
 import Reveal from "@/components/Reveal";
+import TeachingsVideoGrid from "@/components/TeachingsVideoGrid";
 import { audioReleases, audioTeachings } from "@/data/teachings";
+
+const dgcWebsiteUrl = "https://www.davidicgenerationchurch.com/";
 
 export const metadata = {
   title: "Teachings | Pastor Victor Akuwa",
   description:
-    "Listen to audio teachings from The Prevailing House Global and explore audio releases from Pastor Victor Akuwa.",
+    "Watch selected messages from Pastor Victor Akuwa’s teaching ministry at Davidic Generation Church Ibadan, and explore his audio releases.",
 };
 
 export default function Teachings() {
@@ -47,41 +50,69 @@ export default function Teachings() {
                 <p className="text-sm font-semibold uppercase tracking-widest text-muted">
                   Audio teachings
                 </p>
-                <h2 className="mt-4 max-w-2xl text-3xl font-semibold tracking-tight sm:text-4xl">
+                <h2 className="max-w-2xl text-3xl font-semibold tracking-tight sm:text-4xl">
                   {audioTeachings.channel}
                 </h2>
                 <p className="mt-3 max-w-xl leading-relaxed text-muted">
                   {audioTeachings.description}
                 </p>
               </div>
+            </div>
+          </Reveal>
+
+          <Reveal delay={0.08}>
+            <div className="mt-8 flex flex-col gap-5 border border-line bg-background p-6 sm:mt-10 sm:flex-row sm:items-center sm:justify-between sm:p-8">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted">
+                  Telegram channel
+                </p>
+                <p className="mt-2 text-lg font-semibold tracking-tight">
+                  Browse the latest teachings from {audioTeachings.channel}.
+                </p>
+              </div>
               <a
                 href={audioTeachings.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex min-h-11 w-fit shrink-0 items-center gap-2 text-sm font-semibold underline decoration-line underline-offset-4 transition-colors hover:decoration-foreground"
+                className="inline-flex min-h-11 w-fit shrink-0 items-center gap-2 rounded-full bg-foreground px-6 py-3 text-sm font-semibold text-background transition-opacity hover:opacity-80"
               >
                 Open in Telegram
                 <ArrowUpRight size={16} />
               </a>
             </div>
           </Reveal>
+        </div>
+      </section>
 
-          <Reveal delay={0.08}>
-            <div className="mt-8 overflow-hidden border border-line bg-background p-1 sm:mt-10 sm:p-2">
-              <p className="px-3 pb-3 pt-2 text-xs font-semibold uppercase tracking-[0.16em] text-muted">
-                Telegram channel preview
-              </p>
-              <iframe
-                src="https://t.me/s/ThePrevailingHouse?embed=1"
-                title="The Prevailing House Global Telegram preview"
-                loading="lazy"
-                className="h-[360px] w-full border-0 bg-background sm:h-[460px]"
-                referrerPolicy="strict-origin-when-cross-origin"
-              />
-              <p className="px-3 pb-2 pt-3 text-sm text-muted">
-                Open the channel in Telegram to browse the full audio feed.
-              </p>
+      <section className="border-y border-line bg-background py-16 sm:py-20 lg:py-24">
+        <div className="container-px">
+          <Reveal>
+            <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
+              <div>
+                <h2 className="mt-4 max-w-2xl text-3xl font-semibold tracking-tight sm:text-4xl">
+                  Teachings from Davidic Generation Church Ibadan.
+                </h2>
+                <p className="mt-3 max-w-xl leading-relaxed text-muted">
+                  These messages share what Pastor Victor Akuwa teaches as
+                  Resident Pastor at Davidic Generation Church Ibadan. Search
+                  by title or choose a series, then select a message to watch
+                  it here and read its summary.
+                </p>
+              </div>
+              <a
+                href={dgcWebsiteUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex min-h-11 w-fit shrink-0 items-center gap-2 text-sm font-semibold underline decoration-line underline-offset-4 transition-colors hover:decoration-foreground"
+              >
+                Visit Davidic Generation Church
+                <ArrowUpRight size={16} />
+              </a>
             </div>
+          </Reveal>
+
+          <Reveal delay={0.06}>
+            <TeachingsVideoGrid />
           </Reveal>
         </div>
       </section>

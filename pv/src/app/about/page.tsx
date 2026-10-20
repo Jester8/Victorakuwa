@@ -17,8 +17,8 @@ export default function About() {
       {/* Hero */}
       <section className="relative flex h-[88svh] min-h-[520px] max-h-[820px] w-full items-end overflow-hidden">
         <Image
-          src="/hero/slide-04-profile.webp"
-          alt="Pastor Victor Akuwa looking to the side from his desk."
+          src="/photos/IMG_8143.webp"
+          alt="Pastor Victor Akuwa standing beside his desk."
           fill
           priority
           sizes="100vw"
