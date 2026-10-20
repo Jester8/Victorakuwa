@@ -96,7 +96,7 @@ export default function Teachings() {
                   These messages share what Pastor Victor Akuwa teaches as
                   Resident Pastor at Davidic Generation Church Ibadan. Search
                   by title or choose a series, then select a message to watch
-                  it here and read its summary.
+                  it in a popup.
                 </p>
               </div>
               <a

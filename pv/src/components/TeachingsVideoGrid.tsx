@@ -6,11 +6,6 @@ import { createPortal } from "react-dom";
 import { Play, X } from "lucide-react";
 import { videoTeachings, type VideoTeaching } from "@/data/videoTeachings";
 
-const summarySourceLabels = {
-  "Caption-based": "Summary from auto-generated captions",
-  "Title-based": "Overview based on the video title",
-  "Captions unavailable": "Transcript unavailable",
-};
 const seriesFilters = Array.from(
   new Set(
     videoTeachings.flatMap((video) => (video.series ? [video.series] : [])),
@@ -184,20 +179,6 @@ export default function TeachingsVideoGrid() {
                   </span>
                 </div>
               </button>
-
-              <details className="border-t border-line px-4 py-3">
-                <summary className="cursor-pointer text-sm font-semibold">
-                  Read message summary
-                </summary>
-                <div className="pt-3">
-                  <p className="text-xs font-semibold uppercase tracking-wide text-muted">
-                    {summarySourceLabels[video.summarySource]}
-                  </p>
-                  <p className="mt-2 text-sm leading-relaxed text-muted">
-                    {video.summary}
-                  </p>
-                </div>
-              </details>
             </article>
           ))}
         </div>
@@ -256,15 +237,6 @@ export default function TeachingsVideoGrid() {
                   referrerPolicy="strict-origin-when-cross-origin"
                   className="h-full w-full border-0"
                 />
-              </div>
-
-              <div className="px-4 py-5 sm:px-6 sm:py-6">
-                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted">
-                  {summarySourceLabels[activeVideo.summarySource]}
-                </p>
-                <p className="mt-2 max-w-3xl leading-relaxed">
-                  {activeVideo.summary}
-                </p>
               </div>
             </div>
           </div>,
