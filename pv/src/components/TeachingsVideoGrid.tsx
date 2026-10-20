@@ -173,10 +173,6 @@ export default function TeachingsVideoGrid() {
                     {video.speaker} <span aria-hidden="true">·</span>{" "}
                     {formatSermonDate(video.date)}
                   </p>
-                  <span className="mt-4 inline-flex items-center gap-2 text-sm font-semibold">
-                    Watch this message
-                    <Play size={14} fill="currentColor" />
-                  </span>
                 </div>
               </button>
             </article>
