@@ -3,7 +3,6 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import Reveal from "@/components/Reveal";
 import TypewriterHeading from "@/components/TypewriterHeading";
-import PhotoGallery from "@/components/PhotoGallery";
 
 export const metadata = {
   title: "About | Pastor Victor Akuwa",
@@ -141,8 +140,6 @@ export default function About() {
           </Reveal>
         </div>
       </section>
-
-      <PhotoGallery />
 
       {/* Family */}
       <section className="border-y border-foreground bg-foreground text-background">

@@ -48,7 +48,7 @@ export default function TeachingsVideoGrid() {
   const filterOptions = [
     { value: "all", label: "All messages" },
     ...seriesFilters.map((series) => ({ value: series, label: series })),
-    { value: "standalone", label: "Standalone" },
+    { value: "standalone", label: "Others" },
   ];
 
   const filterCount = (value: string) => {
