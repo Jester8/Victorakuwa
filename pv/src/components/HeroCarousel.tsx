@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import { ArrowLeft, ArrowRight } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useEffect, useState, type ReactNode } from "react";
 
@@ -100,25 +99,6 @@ export default function HeroCarousel({ children }: { children: ReactNode }) {
                 }`}
               />
             ))}
-          </div>
-
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              aria-label="Previous slide"
-              onClick={() => showSlide(activeSlide - 1)}
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-white/60 bg-black/65 text-white transition-colors hover:bg-black/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-            >
-              <ArrowLeft size={17} />
-            </button>
-            <button
-              type="button"
-              aria-label="Next slide"
-              onClick={() => showSlide(activeSlide + 1)}
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-white/60 bg-black/65 text-white transition-colors hover:bg-black/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-            >
-              <ArrowRight size={17} />
-            </button>
           </div>
         </div>
       </div>
