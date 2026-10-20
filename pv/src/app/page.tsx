@@ -3,6 +3,9 @@ import Link from "next/link";
 import { ArrowRight, BookOpen, GraduationCap, HeartHandshake, Users } from "lucide-react";
 import Reveal from "@/components/Reveal";
 import TypewriterHeading from "@/components/TypewriterHeading";
+import HeroCarousel from "@/components/HeroCarousel";
+import BookCarousel from "@/components/BookCarousel";
+import { latestBooks } from "@/data/books";
 
 const roles = [
   {
@@ -31,53 +34,41 @@ export default function Home() {
   return (
     <>
       {/* Hero */}
-      <section className="relative flex h-[92vh] min-h-[640px] w-full items-end overflow-hidden">
-        <Image
-          src="/pv3.jpeg"
-          alt="Pastor Victor Akuwa"
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover object-top"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/55 to-black/10" />
-
-        <div className="container-px relative w-full pb-16 sm:pb-24">
-          <Reveal>
-            <p className="text-sm font-semibold uppercase tracking-widest text-white/70">
-              Teacher &middot; Author &middot; Mentor
-            </p>
-          </Reveal>
-          <TypewriterHeading
-            text="Raising sons who carry God’s influence into every sphere."
-            className="mt-5 max-w-3xl text-4xl font-semibold leading-[1.1] tracking-tight text-white sm:text-5xl lg:text-6xl"
-          >
-            <p className="mt-6 max-w-lg text-lg leading-relaxed text-white/80">
-              Pastor Victor Akuwa is a teacher, author, mentor, husband,
-              father, and a disciple committed to making disciples, devoted
-              to seeing men firmly established in Christ.
-            </p>
-            <div className="mt-9 flex flex-wrap gap-4">
-              <Link
-                href="/about"
-                className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-sm font-semibold text-foreground transition-transform hover:-translate-y-0.5"
-              >
-                About PV
-                <ArrowRight size={16} />
-              </Link>
-              <Link
-                href="/books"
-                className="inline-flex items-center gap-2 rounded-full border border-white px-7 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-white hover:text-foreground"
-              >
-                Explore Books
-              </Link>
-            </div>
-          </TypewriterHeading>
-        </div>
-      </section>
+      <HeroCarousel>
+        <Reveal>
+          <p className="text-sm font-semibold uppercase tracking-widest text-white/70">
+            Teacher &middot; Author &middot; Mentor
+          </p>
+        </Reveal>
+        <TypewriterHeading
+          text="Raising sons who carry God’s influence into every sphere."
+          className="mt-5 max-w-3xl text-4xl font-semibold leading-[1.1] tracking-tight text-white sm:text-5xl lg:text-6xl"
+        >
+          <p className="mt-6 max-w-lg text-lg leading-relaxed text-white/80">
+            Pastor Victor Akuwa is a teacher, author, mentor, husband,
+            father, and a disciple committed to making disciples, devoted
+            to seeing men firmly established in Christ.
+          </p>
+          <div className="mt-9 flex flex-wrap gap-4">
+            <Link
+              href="/about"
+              className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-sm font-semibold text-foreground transition-transform hover:-translate-y-0.5"
+            >
+              About PV
+              <ArrowRight size={16} />
+            </Link>
+            <Link
+              href="/books"
+              className="inline-flex items-center gap-2 rounded-full border border-white px-7 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-white hover:text-foreground"
+            >
+              Explore Books
+            </Link>
+          </div>
+        </TypewriterHeading>
+      </HeroCarousel>
 
       {/* Mission statement */}
-      <section className="mt-12 bg-foreground py-20 text-background sm:mt-20 sm:py-28">
+      <section className="mt-12 overflow-hidden border-y border-foreground bg-foreground py-20 text-background sm:mt-20 sm:py-28">
         <div className="container-px">
           <Reveal>
             <p className="mx-auto max-w-3xl text-center text-2xl font-medium leading-snug tracking-tight sm:text-3xl lg:text-4xl">
@@ -93,14 +84,16 @@ export default function Home() {
       <section className="container-px py-20 sm:py-28">
         <div className="flex flex-col items-center gap-12 md:flex-row md:gap-16">
           <Reveal className="w-full md:w-2/5">
-            <div className="relative aspect-[4/5] w-full overflow-hidden rounded-2xl bg-foreground/5 md:max-w-xs">
-              <Image
-                src="/pv2.jpeg"
-                alt="Pastor Victor Akuwa teaching"
-                fill
-                sizes="(min-width: 768px) 40vw, 100vw"
-                className="object-contain"
-              />
+            <div className="relative aspect-[4/5] w-full overflow-hidden rounded-2xl border border-line bg-background shadow-sm md:max-w-xs">
+              <div className="relative h-full overflow-hidden">
+                <Image
+                  src="/photos/IMG_8139.webp"
+                  alt="Pastor Victor Akuwa seated at his desk."
+                  fill
+                  sizes="(min-width: 768px) 40vw, 100vw"
+                  className="object-cover transition-transform duration-700 hover:scale-[1.035]"
+                />
+              </div>
             </div>
           </Reveal>
 
@@ -131,7 +124,7 @@ export default function Home() {
       </section>
 
       {/* Roles grid */}
-      <section className="border-y border-line bg-foreground/[0.02] py-20 sm:py-28">
+      <section className="border-y border-line bg-background py-20 sm:py-28">
         <div className="container-px">
           <Reveal>
             <p className="text-sm font-semibold uppercase tracking-widest text-muted">
@@ -145,8 +138,8 @@ export default function Home() {
           <div className="mt-14 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {roles.map(({ icon: Icon, title, desc }, i) => (
               <Reveal key={title} delay={i * 0.08}>
-                <div className="h-full rounded-2xl border border-line bg-background p-7 transition-colors hover:border-foreground">
-                  <Icon size={26} strokeWidth={1.5} />
+                <div className="h-full rounded-2xl border border-line bg-background p-7 shadow-sm transition-transform duration-300 hover:-translate-y-1">
+                  <Icon className="text-foreground" size={26} strokeWidth={1.5} />
                   <h3 className="mt-6 text-lg font-semibold tracking-tight">
                     {title}
                   </h3>
@@ -164,14 +157,16 @@ export default function Home() {
       <section className="container-px py-20 sm:py-28">
         <div className="flex flex-col items-center gap-12 md:flex-row-reverse md:gap-16">
           <Reveal className="w-full md:w-2/5">
-            <div className="relative aspect-[4/5] w-full overflow-hidden rounded-2xl bg-foreground/5 md:max-w-xs">
-              <Image
-                src="/pv4.jpeg"
-                alt="Pastor Victor Akuwa, author"
-                fill
-                sizes="(min-width: 768px) 40vw, 100vw"
-                className="object-contain"
-              />
+            <div className="relative aspect-[4/5] w-full overflow-hidden rounded-2xl border border-line bg-background shadow-sm md:max-w-xs">
+              <div className="relative h-full overflow-hidden">
+                <Image
+                  src="/books/wisdom-through-faith.webp"
+                  alt="Wisdom Through Faith book cover by Victor Akuwa."
+                  fill
+                  sizes="(min-width: 768px) 40vw, 100vw"
+                  className="object-contain p-2 transition-transform duration-700 hover:scale-[1.03]"
+                />
+              </div>
             </div>
           </Reveal>
 
@@ -198,25 +193,55 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Latest releases */}
+      <section className="overflow-hidden border-y border-line bg-background py-20 sm:py-28">
+        <div className="container-px">
+          <Reveal>
+            <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+              <div>
+                <p className="text-sm font-bold uppercase tracking-widest text-muted">
+                  New releases
+                </p>
+                <h2 className="mt-4 max-w-2xl text-3xl font-bold tracking-tight sm:text-4xl">
+                  Two new books from PV.
+                </h2>
+                <p className="mt-4 max-w-xl text-lg leading-relaxed text-muted">
+                  Explore the latest titles and choose one to read or purchase.
+                </p>
+              </div>
+              <Link
+                href="/books"
+                className="inline-flex min-h-11 w-fit items-center gap-2 text-sm font-bold text-foreground transition-colors hover:gap-3"
+              >
+                Browse all books
+                <ArrowRight size={16} />
+              </Link>
+            </div>
+          </Reveal>
+
+          <BookCarousel items={latestBooks} variant="featured" />
+        </div>
+      </section>
+
       {/* Closing CTA */}
       <section className="relative overflow-hidden py-28 sm:py-36">
         <Image
-          src="/pv3.jpeg"
+          src="/photos/IMG_8146.webp"
           alt=""
           fill
           sizes="100vw"
           className="object-cover object-top"
         />
-        <div className="absolute inset-0 bg-foreground/80" />
+        <div className="absolute inset-0 bg-black/75" />
         <div className="container-px relative text-center">
           <Reveal>
-            <h2 className="mx-auto max-w-2xl text-3xl font-semibold tracking-tight text-background sm:text-4xl">
+            <h2 className="mx-auto max-w-2xl text-3xl font-semibold tracking-tight text-white sm:text-4xl">
               Whether through teaching, writing, or mentoring, PV remains
               committed to one mission.
             </h2>
             <Link
               href="/contact"
-              className="mt-9 inline-flex items-center gap-2 rounded-full bg-background px-8 py-3.5 text-sm font-semibold text-foreground transition-transform hover:-translate-y-0.5"
+              className="mt-9 inline-flex items-center gap-2 rounded-full bg-white px-8 py-3.5 text-sm font-semibold text-neutral-950 transition-transform hover:-translate-y-0.5"
             >
               Get in Touch
               <ArrowRight size={16} />

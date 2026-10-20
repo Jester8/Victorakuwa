@@ -5,6 +5,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
 import SmoothScroll from "@/components/SmoothScroll";
+import NewBooksPopup from "@/components/NewBooksPopup";
 
 const manrope = Manrope({
   variable: "--font-manrope",
@@ -24,12 +25,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${manrope.variable} antialiased`}>
-      <body className="flex min-h-screen flex-col bg-background text-foreground">
+      <body className="flex min-h-screen flex-col bg-background font-sans text-foreground">
         <SmoothScroll />
         <Navbar />
         <main className="flex-1">{children}</main>
         <Footer />
         <ScrollToTop />
+        <NewBooksPopup />
       </body>
     </html>
   );

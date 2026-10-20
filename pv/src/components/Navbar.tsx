@@ -4,17 +4,19 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 
 const links = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About" },
   { href: "/books", label: "Books" },
+  { href: "/teachings", label: "Teachings" },
   { href: "/contact", label: "Contact" },
 ];
 
 export default function Navbar() {
   const pathname = usePathname();
+  const prefersReducedMotion = useReducedMotion();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -25,20 +27,61 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  useEffect(() => setOpen(false), [pathname]);
+
   return (
     <header
       className={`sticky top-0 z-50 w-full border-b transition-colors duration-300 ${
         scrolled
-          ? "border-line bg-background/90 backdrop-blur-md"
+          ? "border-line bg-background shadow-sm"
           : "border-transparent bg-background"
       }`}
     >
-      <nav className="container-px flex items-center justify-between py-5">
+      <nav className="container-px flex items-center justify-between py-4 sm:py-5">
         <Link
           href="/"
-          className="text-lg font-semibold tracking-tight text-foreground"
+          aria-label="Pastor Victor Akuwa home"
+          className="group inline-flex items-center gap-3 text-foreground"
         >
-          Pastor Victor Akuwa
+          <svg
+            viewBox="0 0 52 52"
+            aria-hidden="true"
+            className="size-11 shrink-0 transition-transform duration-300 group-hover:-rotate-3 group-hover:scale-[1.04]"
+          >
+            <circle cx="26" cy="26" r="25" fill="currentColor" />
+            <circle
+              cx="26"
+              cy="26"
+              r="21"
+              fill="none"
+              stroke="var(--background)"
+              strokeOpacity=".42"
+              strokeWidth=".8"
+            />
+            <text
+              x="26"
+              y="32.5"
+              textAnchor="middle"
+              fill="var(--background)"
+              fontFamily="'Bodoni 72', Didot, Georgia, serif"
+              fontSize="21"
+              fontWeight="600"
+              letterSpacing="-1.8"
+            >
+              PV
+            </text>
+            <path
+              d="M19 38h14"
+              stroke="var(--background)"
+              strokeOpacity=".62"
+              strokeWidth=".8"
+              strokeLinecap="round"
+            />
+            <circle cx="26" cy="41" r=".8" fill="var(--background)" />
+          </svg>
+          <span className="text-sm font-semibold tracking-tight sm:text-base">
+            Pastor Victor Akuwa
+          </span>
         </Link>
 
         <ul className="hidden items-center gap-10 md:flex">
@@ -51,7 +94,8 @@ export default function Navbar() {
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className="group relative text-sm font-medium text-foreground"
+                  aria-current={active ? "page" : undefined}
+                  className="group relative text-sm font-medium text-foreground transition-colors hover:text-muted"
                 >
                   {link.label}
                   <span
@@ -68,8 +112,9 @@ export default function Navbar() {
         <button
           type="button"
           aria-label={open ? "Close menu" : "Open menu"}
+          aria-expanded={open}
           onClick={() => setOpen((v) => !v)}
-          className="flex h-10 w-10 items-center justify-center md:hidden"
+          className="flex h-10 w-10 items-center justify-center rounded-full border border-line text-foreground transition-transform hover:scale-105 md:hidden"
         >
           {open ? <X size={22} /> : <Menu size={22} />}
         </button>
@@ -81,8 +126,11 @@ export default function Navbar() {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="overflow-hidden border-t border-line md:hidden"
+            transition={{
+              duration: prefersReducedMotion ? 0 : 0.3,
+              ease: [0.22, 1, 0.36, 1],
+            }}
+            className="overflow-hidden border-t border-line bg-background md:hidden"
           >
             <ul className="container-px flex flex-col gap-1 py-4">
               {links.map((link) => {
@@ -95,6 +143,7 @@ export default function Navbar() {
                     <Link
                       href={link.href}
                       onClick={() => setOpen(false)}
+                      aria-current={active ? "page" : undefined}
                       className={`block rounded-md px-3 py-3 text-base font-medium transition-colors ${
                         active
                           ? "bg-foreground text-background"

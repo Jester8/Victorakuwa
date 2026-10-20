@@ -1,110 +1,69 @@
 import Image from "next/image";
-import Link from "next/link";
-import { ArrowRight, BookOpen } from "lucide-react";
+import { BookOpen } from "lucide-react";
 import Reveal from "@/components/Reveal";
-import TypewriterHeading from "@/components/TypewriterHeading";
+import BookCarousel from "@/components/BookCarousel";
 
 export const metadata = {
   title: "Books | Pastor Victor Akuwa",
   description:
-    "Books by Pastor Victor Akuwa, making biblical truth simple, practical, and accessible.",
+    "Explore books by Pastor Victor Akuwa and learn more about each title.",
 };
-
-const placeholders = [
-  { label: "Book One" },
-  { label: "Book Two" },
-  { label: "Book Three" },
-];
 
 export default function Books() {
   return (
     <>
-      {/* Hero */}
-      <section className="relative flex h-[85vh] min-h-[560px] w-full items-end overflow-hidden">
-        <Image
-          src="/pv4.jpeg"
-          alt="Pastor Victor Akuwa, author"
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover object-top grayscale"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/55 to-black/10" />
-
-        <div className="container-px relative w-full pb-16 sm:pb-24">
-          <Reveal>
-            <p className="text-sm font-semibold uppercase tracking-widest text-white/70">
-              Books
-            </p>
-          </Reveal>
-          <TypewriterHeading
-            text="Biblical truth, made simple and practical."
-            className="mt-5 max-w-2xl text-4xl font-semibold leading-[1.1] tracking-tight text-white sm:text-5xl"
+      <section className="container-px grid items-center gap-10 py-12 sm:py-16 md:grid-cols-[1.05fr_0.95fr] md:gap-14 lg:py-24">
+        <Reveal>
+          <p className="text-sm font-semibold uppercase tracking-widest text-muted">
+            Books by Victor Akuwa
+          </p>
+          <h1 className="mt-4 max-w-2xl text-4xl font-bold leading-[1.08] tracking-tight sm:text-5xl lg:text-6xl">
+            Biblical truth for everyday life.
+          </h1>
+          <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted">
+            Explore PV&rsquo;s books on faith, Scripture, and the life of a
+            believer. Open a title to read more and find a purchase link.
+          </p>
+          <a
+            href="#titles"
+            className="mt-8 inline-flex min-h-12 items-center gap-2 rounded-full bg-foreground px-7 py-3.5 text-sm font-semibold text-background transition-transform hover:-translate-y-0.5"
           >
-            <p className="mt-6 max-w-lg text-lg leading-relaxed text-white/80">
-              As the author of several books, PV has consistently made
-              biblical truth simple, practical, and accessible, helping
-              believers develop strong Christian foundations and mature in
-              their walk with God.
-            </p>
-          </TypewriterHeading>
-        </div>
+            Browse the titles
+            <BookOpen size={16} />
+          </a>
+        </Reveal>
+
+        <Reveal delay={0.1}>
+          <div className="relative mx-auto aspect-[4/5] w-full max-w-md overflow-hidden rounded-2xl border border-line bg-background shadow-sm md:ml-auto">
+            <div className="relative h-full overflow-hidden">
+              <Image
+                src="/photos/IMG_8138.webp"
+                alt="Pastor Victor Akuwa reflecting at his desk."
+                fill
+                priority
+                sizes="(min-width: 1024px) 38vw, (min-width: 768px) 44vw, 100vw"
+                className="object-cover transition-transform duration-700 hover:scale-[1.035]"
+              />
+            </div>
+          </div>
+        </Reveal>
       </section>
 
-      {/* Books grid */}
-      <section className="border-t border-line py-20 sm:py-28">
+      <section
+        id="titles"
+        className="border-y border-line bg-background py-16 sm:py-20 lg:py-24"
+      >
         <div className="container-px">
           <Reveal>
-            <p className="text-sm font-semibold uppercase tracking-widest text-muted">
-              Titles
+          <p className="text-sm font-bold uppercase tracking-widest text-muted">
+              The book collection
             </p>
-            <h2 className="mt-4 max-w-2xl text-3xl font-semibold tracking-tight sm:text-4xl">
-              New releases coming soon.
+            <h2 className="mt-4 max-w-2xl text-3xl font-bold tracking-tight sm:text-4xl">
+              Choose a title to continue.
             </h2>
           </Reveal>
 
-          <div className="mt-14 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {placeholders.map(({ label }, i) => (
-              <Reveal key={label} delay={i * 0.08}>
-                <div className="group">
-                  <div className="relative flex aspect-[3/4] w-full flex-col items-center justify-center overflow-hidden rounded-2xl border border-line bg-foreground/[0.03] transition-colors group-hover:border-foreground">
-                    <BookOpen
-                      size={32}
-                      strokeWidth={1.25}
-                      className="text-muted"
-                    />
-                    <span className="mt-4 text-xs font-semibold uppercase tracking-widest text-muted">
-                      Coming Soon
-                    </span>
-                  </div>
-                  <h3 className="mt-5 text-lg font-semibold tracking-tight">
-                    {label}
-                  </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-muted">
-                    Details for this title will be added soon.
-                  </p>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="border-t border-line bg-foreground text-background">
-        <div className="container-px py-20 text-center sm:py-28">
-          <Reveal>
-            <h2 className="mx-auto max-w-xl text-2xl font-semibold leading-snug tracking-tight sm:text-3xl">
-              Want to be notified when new titles release?
-            </h2>
-            <Link
-              href="/contact"
-              className="mt-9 inline-flex items-center gap-2 rounded-full bg-background px-8 py-3.5 text-sm font-semibold text-foreground transition-transform hover:-translate-y-0.5"
-            >
-              Get in Touch
-              <ArrowRight size={16} />
-            </Link>
-          </Reveal>
+          <BookCarousel />
         </div>
       </section>
     </>

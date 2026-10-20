@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import Reveal from "@/components/Reveal";
 import TypewriterHeading from "@/components/TypewriterHeading";
+import PhotoGallery from "@/components/PhotoGallery";
 
 export const metadata = {
   title: "About | Pastor Victor Akuwa",
@@ -14,10 +15,10 @@ export default function About() {
   return (
     <>
       {/* Hero */}
-      <section className="relative flex h-[85vh] min-h-[560px] w-full items-end overflow-hidden">
+      <section className="relative flex h-[88svh] min-h-[520px] max-h-[820px] w-full items-end overflow-hidden">
         <Image
-          src="/pv3.jpeg"
-          alt="Pastor Victor Akuwa"
+          src="/hero/slide-04-profile.webp"
+          alt="Pastor Victor Akuwa looking to the side from his desk."
           fill
           priority
           sizes="100vw"
@@ -45,10 +46,13 @@ export default function About() {
       </section>
 
       {/* Mission */}
-      <section className="border-y border-line bg-foreground/[0.02] py-16 sm:py-20">
+      <section className="border-y border-line bg-background py-16 sm:py-20">
         <div className="container-px">
-          <Reveal>
-            <p className="mx-auto max-w-3xl text-center text-xl font-medium leading-relaxed tracking-tight sm:text-2xl">
+          <Reveal className="mx-auto max-w-5xl rounded-2xl border border-line bg-background px-7 py-10 shadow-sm sm:px-12 sm:py-14">
+            <p className="text-center text-xs font-semibold uppercase tracking-widest text-muted">
+              The mission
+            </p>
+            <p className="mx-auto mt-4 max-w-3xl text-center text-xl font-medium leading-relaxed tracking-tight sm:text-2xl">
               Raising people who know God deeply, live by His Word, and
               carry His influence into every sphere of society, a conviction
               that has shaped not only his ministry, but also the way he has
@@ -99,11 +103,11 @@ export default function About() {
           <Reveal className="w-full md:w-2/5">
             <div className="relative aspect-[4/5] w-full overflow-hidden rounded-2xl bg-foreground/5 md:max-w-xs">
               <Image
-                src="/pv2.jpeg"
-                alt="Pastor Victor Akuwa preaching"
+                src="/photos/IMG_8135.webp"
+                alt="Pastor Victor Akuwa writing in a notebook at his desk."
                 fill
                 sizes="(min-width: 768px) 40vw, 100vw"
-                className="object-contain grayscale"
+                className="object-cover"
               />
             </div>
           </Reveal>
@@ -138,8 +142,10 @@ export default function About() {
         </div>
       </section>
 
+      <PhotoGallery />
+
       {/* Family */}
-      <section className="border-t border-line bg-foreground text-background">
+      <section className="border-y border-foreground bg-foreground text-background">
         <div className="container-px py-20 text-center sm:py-28">
           <Reveal>
             <p className="text-sm font-semibold uppercase tracking-widest text-background/60">
@@ -167,7 +173,7 @@ export default function About() {
           </h2>
           <Link
             href="/contact"
-            className="mt-9 inline-flex items-center gap-2 rounded-full bg-foreground px-8 py-3.5 text-sm font-semibold text-background transition-transform hover:-translate-y-0.5"
+            className="mt-9 inline-flex items-center gap-2 rounded-full bg-background px-8 py-3.5 text-sm font-semibold text-foreground transition-transform hover:-translate-y-0.5"
           >
             Get in Touch
             <ArrowRight size={16} />
