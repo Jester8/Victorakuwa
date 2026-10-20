@@ -8,6 +8,55 @@ export type VideoTeaching = {
 
 export const videoTeachings: VideoTeaching[] = [
   {
+    id: "J1Qxhs79sG4",
+    title: "Faith to Take the City: Being in Alignment with God's Word",
+    speaker: "Pastor Victor Akuwa",
+    date: "2026-02-11",
+    series: null,
+  },
+  {
+    id: "hzvkg8eoObM",
+    title: "Spiritual Protocol — Part 2",
+    speaker: "Pastor Victor Akuwa",
+    date: "2026-02-18",
+    series: "Spiritual Protocol",
+  },
+  {
+    id: "xkTDhTahULA",
+    title: "Aligning with God's Will",
+    speaker: "Pastor Victor Akuwa",
+    date: "2026-02-22",
+    series: null,
+  },
+  {
+    id: "0JGOez6bLMs",
+    title: "Rest by Authority",
+    speaker: "Pastor Victor Akuwa",
+    date: "2026-04-15",
+    series: "Rest by Authority",
+  },
+  {
+    id: "vD8im3EJyV8",
+    title: "Rest by Authority in the Gift of God",
+    speaker: "Pastor Victor Akuwa",
+    date: "2026-04-22",
+    series: "Rest by Authority",
+  },
+  {
+    id: "Zt-SCIwMXc8",
+    title: "Faith for Rest — Part 3",
+    speaker: "Pastor Victor Akuwa",
+    date: "2026-05-03",
+    series: "Faith for Rest",
+  },
+  {
+    id: "DRkBnCIc3EQ",
+    title: "Table for Rest",
+    speaker: "Pastor Victor Akuwa",
+    date: "2026-05-13",
+    series: null,
+  },
+  {
     id: "TBPqeNqqMnc",
     title: "Evening of Worship",
     speaker: "Davidic Generation Church Ibadan",
