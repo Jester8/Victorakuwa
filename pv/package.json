@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^5.4.0",
+    "@neon/config": "^1.9.3",
+    "@neon/env": "^1.6.4",
     "@studio-freight/lenis": "^1.0.42",
     "@tiptap/extension-image": "^3.32.0",
     "@tiptap/extensions": "^3.32.0",
