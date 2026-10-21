@@ -10,6 +10,7 @@ export const metadata = {
 };
 
 const officialLinksUrl = "https://linktr.ee/vakuwa";
+const instagramUrl = "https://www.instagram.com/akuwavictor";
 const contactEmail = process.env.NEXT_PUBLIC_CONTACT_EMAIL?.trim();
 
 export default function Contact() {
@@ -75,13 +76,22 @@ export default function Contact() {
             <ArrowUpRight size={15} />
           </a>
 
-          <div className="mt-10 flex items-center gap-4 border-t border-line pt-6">
+          <a
+            href={instagramUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Pastor Victor Akuwa on Instagram, @akuwavictor"
+            className="group mt-10 flex items-center gap-4 border-t border-line pt-6"
+          >
             <InstagramIcon size={22} />
             <div>
               <p className="text-sm font-semibold">Instagram</p>
-              <p className="mt-1 text-sm text-muted">Profile link coming soon</p>
+              <p className="mt-1 inline-flex items-center gap-1 text-sm text-muted transition-colors group-hover:text-foreground">
+                @akuwavictor
+                <ArrowUpRight size={14} />
+              </p>
             </div>
-          </div>
+          </a>
         </Reveal>
 
         <Reveal delay={0.08}>
