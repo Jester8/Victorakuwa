@@ -3,7 +3,6 @@
 import Image from "next/image";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useEffect, useState, type ReactNode } from "react";
-import HeroParticles from "@/components/HeroParticles";
 
 const slides = [
   {
@@ -76,7 +75,6 @@ export default function HeroCarousel({ children }: { children: ReactNode }) {
         </AnimatePresence>
       </div>
       <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/10" />
-      <HeroParticles />
 
       <div className="container-px relative w-full pb-6 sm:pb-9">
         {children}
