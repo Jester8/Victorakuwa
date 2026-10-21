@@ -4,6 +4,7 @@ import { ArrowRight, BookOpen, GraduationCap, HeartHandshake, Users } from "luci
 import Reveal from "@/components/Reveal";
 import TypewriterHeading from "@/components/TypewriterHeading";
 import HeroCarousel from "@/components/HeroCarousel";
+import Marquee from "@/components/Marquee";
 import BookCarousel from "@/components/BookCarousel";
 import { books, latestBooks } from "@/data/books";
 
@@ -67,8 +68,10 @@ export default function Home() {
         </TypewriterHeading>
       </HeroCarousel>
 
+      <Marquee />
+
       {/* Mission statement */}
-      <section className="mt-12 overflow-hidden border-y border-foreground bg-foreground py-20 text-background sm:mt-20 sm:py-28">
+      <section className="overflow-hidden border-y border-foreground bg-foreground py-20 text-background sm:py-28">
         <div className="container-px">
           <Reveal>
             <p className="mx-auto max-w-3xl text-center text-2xl font-medium leading-snug tracking-tight sm:text-3xl lg:text-4xl">
