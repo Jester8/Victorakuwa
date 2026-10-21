@@ -17,6 +17,9 @@ export default function NewBooksPopup() {
   const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
+    // Readers arriving on a blog post (often from a shared link) shouldn't be interrupted.
+    if (window.location.pathname.startsWith("/blog/")) return;
+
     try {
       if (window.localStorage.getItem(hiddenKey) === "1") return;
     } catch {

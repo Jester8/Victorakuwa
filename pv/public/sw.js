@@ -1,5 +1,5 @@
 // Bump VERSION to invalidate old caches after a deploy that changes the shell.
-const VERSION = "v1";
+const VERSION = "v2";
 const SHELL_CACHE = `pv-shell-${VERSION}`;
 const RUNTIME_CACHE = `pv-runtime-${VERSION}`;
 
@@ -9,6 +9,7 @@ const SHELL_URLS = [
   "/books",
   "/teachings",
   "/contact",
+  "/blog",
   "/manifest.webmanifest",
   "/icons/icon-192.png",
   "/icons/icon-512.png",
@@ -81,6 +82,8 @@ self.addEventListener("fetch", (event) => {
 
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
+  // Admin and API responses are private or live data: never cache them.
+  if (url.pathname.startsWith("/admin") || url.pathname.startsWith("/api")) return;
 
   if (request.mode === "navigate") {
     event.respondWith(handleNavigation(request));
