@@ -1,7 +1,7 @@
 "use client";
 
-import { useActionState, useState } from "react";
-import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { useActionState } from "react";
+import { Loader2 } from "lucide-react";
 import { loginAction, type ActionState } from "@/app/admin/actions";
 
 export default function LoginForm() {
@@ -25,34 +25,10 @@ export default function LoginForm() {
           className={inputClass}
         />
       </label>
-      <div>
-        <label htmlFor="admin-password" className="block text-sm font-semibold">
-          Password
-        </label>
-        <div className="relative">
-          <input
-            id="admin-password"
-            name="password"
-            type={showPassword ? "text" : "password"}
-            autoComplete="current-password"
-            required
-            className={`${inputClass} pr-12`}
-          />
-          <button
-            type="button"
-            onClick={() => setShowPassword((visible) => !visible)}
-            aria-label={showPassword ? "Hide password" : "Show password"}
-            aria-pressed={showPassword}
-            className="absolute right-3 top-1/2 -translate-y-1/2 rounded-md p-2 text-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground"
-          >
-            {showPassword ? (
-              <EyeOff size={18} aria-hidden="true" />
-            ) : (
-              <Eye size={18} aria-hidden="true" />
-            )}
-          </button>
-        </div>
-      </div>
+      <label className="block text-sm font-semibold">
+        Password
+        <input name="password" type="password" autoComplete="current-password" required className={inputClass} />
+      </label>
       {state.error && (
         <p role="alert" className="text-sm text-red-700">
           {state.error}
