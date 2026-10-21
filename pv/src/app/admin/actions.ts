@@ -24,8 +24,11 @@ export type ActionState = {
 export async function loginAction(_prev: ActionState, formData: FormData): Promise<ActionState> {
   const email = String(formData.get("email") ?? "");
   const password = String(formData.get("password") ?? "");
-  if (!process.env.ADMIN_EMAIL || !process.env.ADMIN_PASSWORD_HASH || !process.env.SESSION_SECRET) {
-    return { error: "Admin login isn't configured yet. See BLOG_SETUP.md.", email };
+  if (!process.env.ADMIN_PASSWORD_HASH || !process.env.SESSION_SECRET) {
+    return {
+      error: "Admin login needs configuration. Set ADMIN_PASSWORD_HASH and SESSION_SECRET in your environment variables.",
+      email,
+    };
   }
   if (!(await checkCredentials(email, password))) {
     return { error: "That email and password don't match.", email };
