@@ -62,13 +62,22 @@ export default function Teachings() {
 
           <Reveal delay={0.08}>
             <div className="mt-8 flex flex-col gap-5 border border-line bg-background p-6 sm:mt-10 sm:flex-row sm:items-center sm:justify-between sm:p-8">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted">
-                  Telegram channel
-                </p>
-                <p className="mt-2 text-lg font-semibold tracking-tight">
-                  Browse the latest teachings from {audioTeachings.channel}.
-                </p>
+              <div className="flex items-center gap-4 sm:gap-5">
+                <Image
+                  src={audioTeachings.image}
+                  alt={`${audioTeachings.channel} Telegram channel image`}
+                  width={80}
+                  height={80}
+                  className="size-16 shrink-0 rounded-full border border-line object-cover sm:size-20"
+                />
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted">
+                    Telegram channel
+                  </p>
+                  <p className="mt-2 text-lg font-semibold tracking-tight">
+                    Browse the latest teachings from {audioTeachings.channel}.
+                  </p>
+                </div>
               </div>
               <a
                 href={audioTeachings.href}

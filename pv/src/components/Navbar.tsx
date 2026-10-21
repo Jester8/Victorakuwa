@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
@@ -41,8 +42,16 @@ export default function Navbar() {
         <Link
           href="/"
           aria-label="Pastor Victor Akuwa home"
-          className="inline-flex items-center text-foreground"
+          className="inline-flex items-center gap-3 text-foreground"
         >
+          <Image
+            src="/audio/prevailing-house-channel.jpg"
+            alt=""
+            width={40}
+            height={40}
+            priority
+            className="size-10 shrink-0 rounded-full border border-line object-cover"
+          />
           <span className="text-sm font-semibold tracking-tight sm:text-base">
             Pastor Victor Akuwa
           </span>

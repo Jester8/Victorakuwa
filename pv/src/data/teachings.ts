@@ -3,6 +3,7 @@ export const audioTeachings = {
   channel: "The Prevailing House Global",
   description: "Raising Sons, taking territories!",
   href: "https://t.me/ThePrevailingHouse",
+  image: "/audio/prevailing-house-channel.jpg",
 };
 
 export const audioReleases = [
