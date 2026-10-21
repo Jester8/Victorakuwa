@@ -12,6 +12,7 @@ const scryptAsync = promisify(scrypt) as (
 
 export const SESSION_COOKIE = "pv_admin";
 const SESSION_DAYS = 14;
+const DEFAULT_ADMIN_EMAIL = "vakuwa@gmail.com";
 
 function secret() {
   const value = process.env.SESSION_SECRET;
@@ -32,9 +33,9 @@ async function verifyPassword(password: string, stored: string) {
 }
 
 export async function checkCredentials(email: string, password: string) {
-  const adminEmail = process.env.ADMIN_EMAIL?.trim().toLowerCase();
+  const adminEmail = (process.env.ADMIN_EMAIL || DEFAULT_ADMIN_EMAIL).trim().toLowerCase();
   const adminHash = process.env.ADMIN_PASSWORD_HASH?.trim();
-  if (!adminEmail || !adminHash) return false;
+  if (!adminHash) return false;
   // Always run the hash so a wrong email takes as long as a wrong password.
   const passwordOk = await verifyPassword(password, adminHash);
   return passwordOk && email.trim().toLowerCase() === adminEmail;
