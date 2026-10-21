@@ -22,7 +22,7 @@ const vertexShader = /* glsl */ `
 
     vec4 mv = modelViewMatrix * vec4(p, 1.0);
     gl_Position = projectionMatrix * mv;
-    gl_PointSize = aSize * uPixelRatio * (14.0 / -mv.z);
+    gl_PointSize = aSize * uPixelRatio * (60.0 / -mv.z);
 
     float edge = smoothstep(h * 0.5, h * 0.3, abs(p.y));
     float twinkle = 0.55 + 0.45 * sin(uTime * 1.4 + aPhase * 6.0);
@@ -37,7 +37,9 @@ const fragmentShader = /* glsl */ `
   void main() {
     float d = length(gl_PointCoord - 0.5);
     float glow = smoothstep(0.5, 0.0, d);
-    gl_FragColor = vec4(vec3(1.0), glow * glow * vAlpha * uOpacity);
+    float core = smoothstep(0.18, 0.0, d);
+    // Warm white, like candlelight catching dust.
+    gl_FragColor = vec4(vec3(1.0, 0.96, 0.88), (glow * 0.45 + core) * vAlpha * uOpacity);
   }
 `;
 
@@ -110,7 +112,7 @@ export default function HeroParticles() {
       const uniforms = {
         uTime: { value: 0 },
         uScroll: { value: 0 },
-        uOpacity: { value: 0.7 },
+        uOpacity: { value: 0.85 },
         uPixelRatio: { value: pixelRatio },
         uBounds: { value: bounds },
       };
@@ -156,7 +158,7 @@ export default function HeroParticles() {
         const progress = Math.min(window.scrollY / (container.clientHeight || 1), 1);
         uniforms.uTime.value = elapsed;
         uniforms.uScroll.value += (progress - uniforms.uScroll.value) * 0.08;
-        uniforms.uOpacity.value = 0.7 * (1 - progress * 0.8);
+        uniforms.uOpacity.value = 0.85 * (1 - progress * 0.8);
 
         camera.position.x += (pointer.x * 1.2 - camera.position.x) * 0.04;
         camera.position.y += (-pointer.y * 0.8 - camera.position.y) * 0.04;

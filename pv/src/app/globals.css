@@ -84,6 +84,14 @@ body {
   }
 }
 
+.hero-particles {
+  background: radial-gradient(
+    60% 50% at 70% 35%,
+    rgb(255 255 255 / 0.08),
+    transparent 70%
+  );
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
