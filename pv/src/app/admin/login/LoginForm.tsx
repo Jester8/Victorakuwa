@@ -20,6 +20,9 @@ export default function LoginForm() {
           name="email"
           type="email"
           autoComplete="username"
+          autoCapitalize="none"
+          autoCorrect="off"
+          spellCheck={false}
           required
           defaultValue={state.email}
           className={inputClass}
@@ -32,6 +35,11 @@ export default function LoginForm() {
             name="password"
             type={showPassword ? "text" : "password"}
             autoComplete="current-password"
+            // Shown as plain text via the eye button, a phone keyboard would
+            // otherwise capitalise or autocorrect the password.
+            autoCapitalize="none"
+            autoCorrect="off"
+            spellCheck={false}
             required
             className={`${inputClass} pr-12`}
           />
