@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState, useState } from "react";
-import { Loader2 } from "lucide-react";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { loginAction, type ActionState } from "@/app/admin/actions";
 
 export default function LoginForm() {
@@ -27,7 +27,24 @@ export default function LoginForm() {
       </label>
       <label className="block text-sm font-semibold">
         Password
-        <input name="password" type="password" autoComplete="current-password" required className={inputClass} />
+        <span className="relative block">
+          <input
+            name="password"
+            type={showPassword ? "text" : "password"}
+            autoComplete="current-password"
+            required
+            className={`${inputClass} pr-12`}
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword((v) => !v)}
+            aria-label={showPassword ? "Hide password" : "Show password"}
+            aria-pressed={showPassword}
+            className="absolute right-1.5 top-[calc(50%+4px)] flex size-9 -translate-y-1/2 items-center justify-center rounded-lg text-muted transition-colors hover:text-foreground"
+          >
+            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+          </button>
+        </span>
       </label>
       {state.error && (
         <p role="alert" className="text-sm text-red-700">

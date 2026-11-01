@@ -3,6 +3,7 @@ import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
 import SmoothScroll from "@/components/SmoothScroll";
 import NewBooksPopup from "@/components/NewBooksPopup";
+import PageViewTracker from "@/components/PageViewTracker";
 
 export default function SiteLayout({
   children,
@@ -17,6 +18,7 @@ export default function SiteLayout({
       <Footer />
       <ScrollToTop />
       <NewBooksPopup />
+      <PageViewTracker />
     </>
   );
 }

@@ -70,7 +70,7 @@ function ToolbarButton({
       disabled={disabled}
       onMouseDown={(e) => e.preventDefault()}
       onClick={onClick}
-      className={`flex size-9 items-center justify-center rounded-lg transition-colors disabled:opacity-30 ${
+      className={`flex size-9 shrink-0 items-center justify-center rounded-lg transition-colors disabled:opacity-30 ${
         active ? "bg-foreground text-background" : "text-foreground/75 hover:bg-foreground/5 hover:text-foreground"
       }`}
     >
@@ -111,14 +111,14 @@ function Toolbar({ editor, onImage, uploading }: { editor: Editor; onImage: () =
     editor.chain().focus().extendMarkRange("link").setLink({ href }).run();
   };
 
-  const divider = <span className="mx-1 h-6 w-px bg-line" aria-hidden="true" />;
+  const divider = <span className="mx-1 h-6 w-px shrink-0 bg-line" aria-hidden="true" />;
   const c = () => editor.chain().focus();
 
   return (
     <div
       role="toolbar"
       aria-label="Formatting"
-      className="sticky top-0 z-10 flex flex-wrap items-center gap-0.5 border-b border-line bg-background/95 px-2 py-1.5 backdrop-blur"
+      className="flex items-center gap-0.5 overflow-x-auto border-b border-line bg-background/95 px-2 py-1.5 backdrop-blur [scrollbar-width:none] sm:flex-wrap"
     >
       <ToolbarButton label="Paragraph" active={state.paragraph} onClick={() => c().setParagraph().run()}>
         <Pilcrow size={17} />
@@ -202,7 +202,7 @@ export default function PostEditor({ post, justSaved }: { post: EditablePost; ju
     ],
     content: post.contentHtml,
     editorProps: {
-      attributes: { class: "blog-prose min-h-[24rem] px-5 py-6 outline-none sm:px-8" },
+      attributes: { class: "blog-prose min-h-[20rem] px-4 py-5 outline-none sm:min-h-[24rem] sm:px-8 sm:py-6" },
     },
     onUpdate: ({ editor: e }) => {
       setContentHtml(e.getHTML());
@@ -280,8 +280,8 @@ export default function PostEditor({ post, justSaved }: { post: EditablePost; ju
       <input type="hidden" name="coverUrl" value={coverUrl} />
       <input type="hidden" name="contentHtml" value={contentHtml} />
 
-      <div className="sticky top-0 z-20 -mx-5 -mt-8 mb-6 flex flex-wrap items-center justify-between gap-3 border-b border-line bg-neutral-50/95 px-5 py-3 backdrop-blur md:-mx-10 md:-mt-10 md:px-10">
-        <div className="flex items-center gap-3 text-sm">
+      <div className="sticky top-0 z-20 -mx-4 -mt-6 mb-5 flex flex-wrap items-center justify-between gap-x-3 gap-y-2 border-b border-line bg-neutral-50/95 px-4 py-3 backdrop-blur sm:-mx-5 sm:-mt-8 sm:mb-6 sm:px-5 md:-mx-10 md:-mt-10 md:px-10">
+        <div className="flex min-w-0 items-center gap-2 text-sm sm:gap-3">
           <Link href="/admin/posts" className="text-muted hover:text-foreground">
             Posts
           </Link>
@@ -293,11 +293,11 @@ export default function PostEditor({ post, justSaved }: { post: EditablePost; ju
           >
             {isLive ? "Live" : "Draft"}
           </span>
-          <span className="text-muted" aria-live="polite">
+          <span className="truncate text-muted" aria-live="polite">
             {pending ? "Saving…" : showSaved ? "Saved" : dirty ? "Unsaved changes" : ""}
           </span>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="ml-auto flex items-center gap-2">
           {isLive && post.id && (
             <Link
               href={`/blog/${slug}`}
@@ -312,7 +312,7 @@ export default function PostEditor({ post, justSaved }: { post: EditablePost; ju
             name="status"
             value="draft"
             disabled={pending || uploading !== null}
-            className="h-10 rounded-full border border-line bg-background px-4 text-sm font-semibold transition-colors hover:border-foreground disabled:opacity-50"
+            className="h-9 rounded-full border border-line bg-background px-3.5 text-sm font-semibold transition-colors hover:border-foreground disabled:opacity-50 sm:h-10 sm:px-4"
           >
             {isLive ? "Unpublish" : "Save draft"}
           </button>
@@ -321,7 +321,7 @@ export default function PostEditor({ post, justSaved }: { post: EditablePost; ju
             name="status"
             value="published"
             disabled={pending || uploading !== null}
-            className="inline-flex h-10 items-center gap-2 rounded-full bg-foreground px-5 text-sm font-semibold text-background transition-opacity hover:opacity-80 disabled:opacity-50"
+            className="inline-flex h-9 items-center gap-2 rounded-full bg-foreground px-4 text-sm font-semibold text-background transition-opacity hover:opacity-80 disabled:opacity-50 sm:h-10 sm:px-5"
           >
             {pending && <Loader2 size={15} className="animate-spin" />}
             {isLive ? "Update" : "Publish"}
@@ -336,7 +336,7 @@ export default function PostEditor({ post, justSaved }: { post: EditablePost; ju
       )}
 
       <div className="space-y-5">
-        <div className="rounded-2xl border border-line bg-background p-5 sm:p-6">
+        <div className="rounded-2xl border border-line bg-background p-4 sm:p-6">
           {coverUrl ? (
             <div className="relative overflow-hidden rounded-xl bg-line">
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -364,7 +364,7 @@ export default function PostEditor({ post, justSaved }: { post: EditablePost; ju
               type="button"
               onClick={() => coverInput.current?.click()}
               disabled={uploading === "cover"}
-              className="flex aspect-[16/6] w-full flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-line text-sm text-muted transition-colors hover:border-foreground hover:text-foreground"
+              className="flex aspect-[16/8] w-full sm:aspect-[16/6] flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-line text-sm text-muted transition-colors hover:border-foreground hover:text-foreground"
             >
               {uploading === "cover" ? <Loader2 size={20} className="animate-spin" /> : <ImagePlus size={22} />}
               {uploading === "cover" ? "Uploading…" : "Add a cover image"}
@@ -392,7 +392,7 @@ export default function PostEditor({ post, justSaved }: { post: EditablePost; ju
                 if (!slugTouched) setSlug(slugify(e.target.value));
               }}
               placeholder="Post title"
-              className="field-sizing-content w-full resize-none bg-transparent text-3xl font-semibold leading-tight tracking-tight outline-none placeholder:text-foreground/25 sm:text-4xl"
+              className="field-sizing-content w-full resize-none bg-transparent text-2xl font-semibold leading-tight tracking-tight outline-none placeholder:text-foreground/25 sm:text-4xl"
             />
           </label>
           <label className="mt-3 block">
@@ -404,7 +404,7 @@ export default function PostEditor({ post, justSaved }: { post: EditablePost; ju
               rows={2}
               onChange={(e) => markDirty(setExcerpt)(e.target.value)}
               placeholder="A one or two sentence summary, shown on the blog page and when shared"
-              className="field-sizing-content w-full resize-none bg-transparent text-lg leading-relaxed text-muted outline-none placeholder:text-foreground/25"
+              className="field-sizing-content w-full resize-none bg-transparent text-base leading-relaxed text-muted outline-none sm:text-lg placeholder:text-foreground/25"
             />
           </label>
           <label className="mt-3 flex items-center gap-1 border-t border-line pt-4 text-sm text-muted">

@@ -322,6 +322,20 @@ export async function savePost(input: {
   return row.id;
 }
 
+/** Publish or unpublish from the posts list. Returns the slug so its page can be revalidated. */
+export async function setPostStatus(id: number, status: "draft" | "published") {
+  const sql = await db();
+  const [row] = await sql<{ slug: string }[]>`
+    update posts set
+      status = ${status},
+      published_at = case when ${status} = 'published' then coalesce(published_at, now()) else published_at end,
+      updated_at = now()
+    where id = ${id}
+    returning slug
+  `;
+  return row?.slug ?? null;
+}
+
 export async function deletePost(id: number) {
   const sql = await db();
   await sql`delete from posts where id = ${id}`;

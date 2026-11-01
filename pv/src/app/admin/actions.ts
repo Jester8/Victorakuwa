@@ -6,8 +6,10 @@ import { checkCredentials, endSession, requireAdmin, startSession } from "@/lib/
 import {
   deleteComment,
   deletePost,
+  getPostById,
   savePost,
   setCommentHidden,
+  setPostStatus,
   slugExists,
 } from "@/lib/blog";
 import { plainText, sanitizePostHtml } from "@/lib/sanitize";
@@ -80,7 +82,26 @@ export async function deletePostAction(formData: FormData) {
   const id = Number(formData.get("id"));
   if (Number.isInteger(id)) await deletePost(id);
   revalidatePath("/blog");
-  redirect("/admin/posts");
+  revalidatePath("/admin/posts");
+  // From the posts list, stay on the same filtered view; from the editor, go back to the list.
+  const back = String(formData.get("back") ?? "");
+  redirect(back.startsWith("/admin/posts") ? back : "/admin/posts");
+}
+
+export async function setPostStatusAction(formData: FormData) {
+  await requireAdmin();
+  const id = Number(formData.get("id"));
+  const status = formData.get("status") === "published" ? "published" : "draft";
+  if (!Number.isInteger(id)) return;
+  if (status === "published") {
+    const post = await getPostById(id);
+    // Same rule as the editor: an empty post can't go live.
+    if (!post || !post.title.trim() || !plainText(post.contentHtml)) return;
+  }
+  const slug = await setPostStatus(id, status);
+  revalidatePath("/blog");
+  if (slug) revalidatePath(`/blog/${slug}`);
+  revalidatePath("/admin/posts");
 }
 
 export async function setCommentHiddenAction(formData: FormData) {

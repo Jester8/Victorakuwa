@@ -16,9 +16,9 @@ const NETWORK_LABELS: Record<string, string> = {
 
 function Stat({ label, value, hint }: { label: string; value: number; hint?: string }) {
   return (
-    <div className="rounded-2xl border border-line bg-background p-5">
-      <p className="text-sm text-muted">{label}</p>
-      <p className="mt-2 text-3xl font-semibold tabular-nums tracking-tight">
+    <div className="min-w-0 rounded-2xl border border-line bg-background p-4 sm:p-5">
+      <p className="truncate text-sm text-muted">{label}</p>
+      <p className="mt-2 text-2xl sm:text-3xl font-semibold tabular-nums tracking-tight">
         {value.toLocaleString("en-GB")}
       </p>
       {hint && <p className="mt-1 text-xs text-muted">{hint}</p>}
@@ -55,7 +55,7 @@ function TrafficChart({ daily }: { daily: { day: string; views: number; visitors
     );
   return (
     <div>
-      <div className="flex h-44 items-end gap-[3px]" role="img" aria-label="Daily page views">
+      <div className="flex h-36 items-end gap-px sm:h-44 sm:gap-[3px]" role="img" aria-label="Daily page views">
         {daily.map((d) => (
           <div key={d.day} className="group relative flex h-full flex-1 items-end">
             <div
@@ -97,15 +97,15 @@ export default async function AdminOverview({
     <div className="mx-auto max-w-6xl">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-semibold tracking-tight">Overview</h1>
-          <p className="mt-1 text-muted">How the website and blog are doing.</p>
+          <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">Overview</h1>
+          <p className="mt-1 text-sm text-muted sm:text-base">How the website and blog are doing.</p>
         </div>
-        <div className="flex rounded-full border border-line bg-background p-1 text-sm">
+        <div className="flex w-full rounded-full border border-line bg-background p-1 text-sm sm:w-auto">
           {RANGES.map((range) => (
             <Link
               key={range}
               href={`/admin?days=${range}`}
-              className={`rounded-full px-4 py-1.5 font-medium transition-colors ${
+              className={`flex-1 rounded-full px-4 py-1.5 text-center font-medium transition-colors sm:flex-none ${
                 range === days ? "bg-foreground text-background" : "text-muted hover:text-foreground"
               }`}
             >
@@ -115,7 +115,7 @@ export default async function AdminOverview({
         </div>
       </div>
 
-      <div className="mt-8 grid grid-cols-2 gap-3 lg:grid-cols-4">
+      <div className="mt-6 grid grid-cols-2 gap-3 sm:mt-8 lg:grid-cols-4">
         <Stat label="Visitors" value={totals.visitors} hint="Unique browsers" />
         <Stat label="Page views" value={totals.views} />
         <Stat label="Commenters" value={totals.commenters} hint={`${totals.comments} comments`} />
@@ -126,7 +126,7 @@ export default async function AdminOverview({
         <Stat label="Published posts" value={totals.posts} />
       </div>
 
-      <section className="mt-6 rounded-2xl border border-line bg-background p-5 sm:p-6">
+      <section className="mt-6 rounded-2xl border border-line bg-background p-4 sm:p-6">
         <h2 className="font-semibold">Traffic</h2>
         <p className="text-sm text-muted">Page views per day, last {days} days</p>
         <div className="mt-6">
@@ -135,7 +135,7 @@ export default async function AdminOverview({
       </section>
 
       <div className="mt-6 grid gap-6 lg:grid-cols-2">
-        <section className="rounded-2xl border border-line bg-background p-5 sm:p-6">
+        <section className="rounded-2xl border border-line bg-background p-4 sm:p-6">
           <h2 className="font-semibold">Top posts</h2>
           {topPosts.length === 0 ? (
             <p className="mt-4 text-sm text-muted">No published posts yet.</p>
@@ -146,23 +146,23 @@ export default async function AdminOverview({
                   <tr>
                     <th className="pb-2 font-medium">Post</th>
                     <th className="pb-2 text-right font-medium">Views</th>
-                    <th className="pb-2 text-right font-medium">Likes</th>
-                    <th className="pb-2 text-right font-medium">Comments</th>
-                    <th className="pb-2 text-right font-medium">Shares</th>
+                    <th className="hidden pb-2 text-right font-medium sm:table-cell">Likes</th>
+                    <th className="pb-2 pl-2 text-right font-medium">Comments</th>
+                    <th className="hidden pb-2 text-right font-medium sm:table-cell">Shares</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-line">
                   {topPosts.map((post) => (
                     <tr key={post.id}>
-                      <td className="max-w-[14rem] truncate py-2.5 pr-3">
+                      <td className="max-w-[10rem] truncate py-2.5 pr-3 sm:max-w-[14rem]">
                         <Link href={`/admin/posts/${post.id}`} className="font-medium hover:underline">
                           {post.title}
                         </Link>
                       </td>
                       <td className="py-2.5 text-right tabular-nums">{post.views}</td>
-                      <td className="py-2.5 text-right tabular-nums">{post.likes}</td>
+                      <td className="hidden py-2.5 text-right tabular-nums sm:table-cell">{post.likes}</td>
                       <td className="py-2.5 text-right tabular-nums">{post.comments}</td>
-                      <td className="py-2.5 text-right tabular-nums">{post.shares}</td>
+                      <td className="hidden py-2.5 text-right tabular-nums sm:table-cell">{post.shares}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -172,7 +172,7 @@ export default async function AdminOverview({
           )}
         </section>
 
-        <section className="rounded-2xl border border-line bg-background p-5 sm:p-6">
+        <section className="rounded-2xl border border-line bg-background p-4 sm:p-6">
           <h2 className="font-semibold">Shares by platform</h2>
           <div className="mt-4">
             <BarList
@@ -182,14 +182,14 @@ export default async function AdminOverview({
           </div>
         </section>
 
-        <section className="rounded-2xl border border-line bg-background p-5 sm:p-6">
+        <section className="rounded-2xl border border-line bg-background p-4 sm:p-6">
           <h2 className="font-semibold">Most visited pages</h2>
           <div className="mt-4">
             <BarList rows={topPages.map((p) => ({ label: p.path, value: p.views }))} empty="No visits yet." />
           </div>
         </section>
 
-        <section className="rounded-2xl border border-line bg-background p-5 sm:p-6">
+        <section className="rounded-2xl border border-line bg-background p-4 sm:p-6">
           <h2 className="font-semibold">Where visitors come from</h2>
           <div className="mt-4">
             <BarList rows={referrers.map((r) => ({ label: r.source, value: r.views }))} empty="No visits yet." />

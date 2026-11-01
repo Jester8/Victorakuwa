@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { redirect } from "next/navigation";
 import { isAdmin } from "@/lib/auth";
 import LoginForm from "@/app/admin/login/LoginForm";
@@ -13,7 +14,7 @@ export default async function AdminLogin() {
       <section className="relative hidden min-h-[760px] overflow-hidden bg-[#171522] px-10 py-12 text-white lg:flex lg:flex-col xl:px-16">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_15%_15%,rgba(139,92,246,0.24),transparent_42%),radial-gradient(ellipse_at_85%_80%,rgba(180,83,9,0.16),transparent_40%)]" />
         <div className="relative z-10 flex items-center gap-3">
-          <span className="flex size-10 items-center justify-center rounded-full border border-white/20 bg-white/10 text-sm font-semibold">PV</span>
+          <Image src="/audio/prevailing-house-channel.jpg" alt="" width={40} height={40} className="size-10 shrink-0 rounded-full border border-white/20 object-cover" />
           <div>
             <p className="text-sm font-semibold tracking-wide">Pastor Victor Akuwa</p>
             <p className="text-xs text-white/55">Author · Teacher · Pastor</p>
@@ -73,7 +74,7 @@ export default async function AdminLogin() {
       <section className="flex min-h-[620px] items-center justify-center px-5 py-16 sm:px-10 lg:min-h-[760px] lg:px-12 xl:px-20">
         <div className="w-full max-w-sm">
           <div className="mb-8 flex items-center gap-3 lg:hidden">
-            <span className="flex size-10 items-center justify-center rounded-full bg-foreground text-sm font-semibold text-background">PV</span>
+            <Image src="/audio/prevailing-house-channel.jpg" alt="" width={40} height={40} className="size-10 shrink-0 rounded-full border border-line object-cover" />
             <div>
               <p className="text-sm font-semibold">Pastor Victor Akuwa</p>
               <p className="text-xs text-muted">Admin portal</p>
