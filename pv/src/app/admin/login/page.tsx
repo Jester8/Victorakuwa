@@ -1,18 +1,45 @@
 import Image from "next/image";
 import { redirect } from "next/navigation";
 import { isAdmin } from "@/lib/auth";
+import { books } from "@/data/books";
 import LoginForm from "@/app/admin/login/LoginForm";
 
-const bookCoverClass =
-  "absolute flex aspect-[3/4.3] w-36 flex-col justify-between overflow-hidden rounded-sm p-4 text-white shadow-2xl ring-1 ring-black/10 sm:w-40";
+// Four staggered columns of PV's real covers, repeated so the tilted wall
+// always overfills the panel whatever its height.
+const columns = [0, 3, 5, 2].map((offset) =>
+  Array.from({ length: 6 }, (_, i) => books[(offset + i) % books.length])
+);
 
 export default async function AdminLogin() {
   if (await isAdmin()) redirect("/admin");
 
   return (
-    <main className="grid min-h-[calc(100vh-5rem)] w-full lg:grid-cols-[minmax(0,1.1fr)_minmax(420px,0.9fr)]">
+    <main className="grid min-h-screen w-full lg:grid-cols-[minmax(0,1.1fr)_minmax(420px,0.9fr)]">
       <section className="relative hidden min-h-[760px] overflow-hidden bg-[#171522] px-10 py-12 text-white lg:flex lg:flex-col xl:px-16">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_15%_15%,rgba(139,92,246,0.24),transparent_42%),radial-gradient(ellipse_at_85%_80%,rgba(180,83,9,0.16),transparent_40%)]" />
+        <div aria-hidden="true" className="absolute inset-0">
+          <div className="absolute -inset-x-[20%] -inset-y-[30%] flex rotate-[-10deg] justify-center gap-5 opacity-80">
+            {columns.map((column, c) => (
+              <div key={c} className={`flex w-44 shrink-0 flex-col gap-5 xl:w-52 ${c % 2 ? "translate-y-24" : ""}`}>
+                {column.map((book, i) => (
+                  <Image
+                    key={`${book.slug}-${i}`}
+                    src={book.cover}
+                    alt=""
+                    width={208}
+                    height={300}
+                    sizes="208px"
+                    loading="eager"
+                    className="h-auto w-full rounded-sm shadow-2xl ring-1 ring-white/10"
+                  />
+                ))}
+              </div>
+            ))}
+          </div>
+          {/* Darken behind the copy and the footer so the text stays readable over the covers. */}
+          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(23,21,34,0.97)_0%,rgba(23,21,34,0.85)_35%,rgba(23,21,34,0.25)_65%,rgba(23,21,34,0.85)_100%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_15%_15%,rgba(139,92,246,0.22),transparent_45%)]" />
+        </div>
+
         <div className="relative z-10 flex items-center gap-3">
           <Image src="/audio/prevailing-house-channel.jpg" alt="" width={40} height={40} className="size-10 shrink-0 rounded-full border border-white/20 object-cover" />
           <div>
@@ -28,51 +55,35 @@ export default async function AdminLogin() {
             <br />
             Wisdom to live.
           </h2>
-          <p className="mt-4 max-w-md text-sm leading-6 text-white/65">
+          <p className="mt-4 max-w-md text-sm leading-6 text-white/70">
             A collection of teachings and books created to deepen faith, inspire growth, and bring God’s Word into everyday life.
           </p>
         </div>
 
-        <div className="relative z-10 mt-10 min-h-[330px] flex-1">
-          <div className="absolute left-[8%] top-10 z-10 w-[52%] rotate-[-7deg] overflow-hidden rounded-md border border-white/15 bg-[#22222a] shadow-2xl transition-transform duration-500 hover:-translate-y-2 hover:rotate-[-4deg]">
-            <img
-              src="https://files.selar.co/product-images/2023/products/victorakuwa/tribal-marks-selar.co-64a018fa319b3.jpg"
-              alt="Tribal Marks by Victor Akuwa book promotion"
-              className="aspect-square w-full object-cover"
-            />
-            <div className="border-t border-white/10 bg-[#22222a] px-4 py-3">
-              <p className="text-sm font-semibold tracking-wide">TRIBAL MARKS</p>
-              <p className="mt-1 text-[10px] uppercase tracking-[0.2em] text-white/50">Victor Akuwa</p>
-            </div>
-          </div>
-
-          <div className={`${bookCoverClass} right-[8%] top-0 rotate-[9deg] bg-gradient-to-br from-[#1b6b65] via-[#14524f] to-[#0a302f]`}>
-            <span className="text-[9px] uppercase tracking-[0.24em] text-white/65">Healing · Wholeness</span>
-            <span className="text-2xl font-semibold leading-tight">JEHOVAH<br />RAPHA</span>
-            <span className="text-[9px] uppercase tracking-[0.18em] text-white/65">Victor Akuwa</span>
-          </div>
-
-          <div className={`${bookCoverClass} bottom-1 left-[16%] rotate-[7deg] bg-gradient-to-br from-[#d5ad68] via-[#a66f35] to-[#5a351f] text-[#fffaf0]`}>
-            <span className="text-[9px] uppercase tracking-[0.22em] text-white/75">A life of faith</span>
-            <span className="text-[22px] font-semibold leading-tight">WISDOM<br />THROUGH<br />FAITH</span>
-            <span className="text-[9px] uppercase tracking-[0.18em] text-white/75">Victor Akuwa</span>
-          </div>
-
-          <div className={`${bookCoverClass} bottom-0 right-[9%] rotate-[-7deg] bg-gradient-to-br from-[#6741a5] via-[#3f286f] to-[#21153f]`}>
-            <span className="text-[9px] uppercase tracking-[0.22em] text-white/65">Living by the God-kind of</span>
-            <span className="text-3xl font-semibold leading-none">FAITH</span>
-            <span className="text-[9px] uppercase tracking-[0.18em] text-white/65">Victor Akuwa</span>
-          </div>
-        </div>
-
-        <div className="relative z-10 mt-8 flex items-center justify-between border-t border-white/10 pt-5 text-xs text-white/45">
-          <span>Books &amp; reflections by Pastor Victor Akuwa</span>
+        <div className="relative z-10 mt-auto flex items-center justify-between border-t border-white/10 pt-5 text-xs text-white/55">
+          <span>{books.length} books by Pastor Victor Akuwa</span>
           <span>Faith · Knowledge · Purpose</span>
         </div>
       </section>
 
-      <section className="flex min-h-[620px] items-center justify-center px-5 py-16 sm:px-10 lg:min-h-[760px] lg:px-12 xl:px-20">
+      <section className="flex items-center justify-center px-5 py-12 sm:px-10 lg:min-h-[760px] lg:px-12 xl:px-20">
         <div className="w-full max-w-sm">
+          <div aria-hidden="true" className="mb-8 flex justify-center lg:hidden">
+            {books.slice(0, 5).map((book, i) => (
+              <Image
+                key={book.slug}
+                src={book.cover}
+                alt=""
+                width={72}
+                height={104}
+                sizes="72px"
+                loading="eager"
+                className={`-mx-2 h-26 w-auto rounded-sm shadow-lg ring-1 ring-black/10 ${
+                  ["-rotate-12 translate-y-3", "-rotate-6 translate-y-1", "z-10 scale-110", "rotate-6 translate-y-1", "rotate-12 translate-y-3"][i]
+                }`}
+              />
+            ))}
+          </div>
           <div className="mb-8 flex items-center gap-3 lg:hidden">
             <Image src="/audio/prevailing-house-channel.jpg" alt="" width={40} height={40} className="size-10 shrink-0 rounded-full border border-line object-cover" />
             <div>

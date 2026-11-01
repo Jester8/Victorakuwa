@@ -12,7 +12,7 @@ const links = [
   { href: "/about", label: "About" },
   { href: "/books", label: "Books" },
   { href: "/teachings", label: "Teachings" },
-  // { href: "/blog", label: "Blog" },
+  { href: "/blog", label: "Blog" },
   { href: "/contact", label: "Contact" },
 ];
 
@@ -58,7 +58,7 @@ export default function Navbar() {
           </span>
         </Link>
 
-        <ul className="hidden items-center gap-10 md:flex">
+        <ul className="hidden items-center gap-7 md:flex lg:gap-10">
           {links.map((link) => {
             const active =
               link.href === "/"
