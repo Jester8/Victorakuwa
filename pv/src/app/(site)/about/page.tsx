@@ -69,13 +69,14 @@ export default function About() {
               Early Life
             </p>
             <h2 className="mt-4 text-2xl font-semibold tracking-tight sm:text-3xl">
-              Agbowo, Ibadan
+              Ibadan, Oyo State
             </h2>
             <p className="mt-5 leading-relaxed text-muted">
-              Raised in Agbowo, Ibadan, as the third of five children in the
-              Akuwa family, PV&rsquo;s journey has been shaped by an
-              unwavering commitment to growth, learning, love for people,
-              and the call of God.
+              Born in Ibadan, Oyo State, Nigeria, PV is the fourth of five
+              children in the Akuwa family and hails from Isiala-Ngwa North
+              Local Government Area of Abia State. Raised in Agbowo, Ibadan,
+              his journey has been shaped by an unwavering commitment to
+              growth, learning, love for people, and the call of God.
             </p>
           </Reveal>
 

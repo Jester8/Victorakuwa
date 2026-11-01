@@ -105,8 +105,9 @@ export default function Home() {
               A life shaped by growth, learning, and the call of God.
             </h2>
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted">
-              Raised in Agbowo, Ibadan, as the third of five children in the
-              Akuwa family, PV studied Psychology at the University of
+              Born in Ibadan and raised in Agbowo as the fourth of five
+              children in the Akuwa family, with roots in Isiala-Ngwa North,
+              Abia State, PV studied Psychology at the University of
               Ibadan before earning two Master&rsquo;s degrees in
               Information Science and Human Resource Management. But beyond
               the academic accomplishments is a man with a singular burden:
