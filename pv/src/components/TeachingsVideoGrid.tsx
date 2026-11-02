@@ -1,61 +1,217 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import { Play, X } from "lucide-react";
-import { videoTeachings, type VideoTeaching } from "@/data/videoTeachings";
+import {
+  occasionLabels,
+  videoTeachings,
+  type Occasion,
+  type VideoTeaching,
+} from "@/data/videoTeachings";
 
-const seriesFilters = Array.from(
-  new Set(
-    videoTeachings.flatMap((video) => (video.series ? [video.series] : [])),
-  ),
+const OCCASIONS = Object.keys(occasionLabels) as Occasion[];
+
+// Headings for the single messages that aren't part of a series.
+const shelfTitles: Record<Occasion, string> = {
+  sunday: "More Sunday services",
+  midweek: "More midweek services",
+  prayer: "More prayer & worship",
+  conversation: "Conversations & moments",
+};
+
+// The small label on each card.
+const cardLabels: Record<Occasion, string> = {
+  sunday: "Sunday service",
+  midweek: "Midweek service",
+  prayer: "Prayer & worship",
+  conversation: "Conversation",
+};
+
+const newestFirst = [...videoTeachings].sort((a, b) =>
+  b.date.localeCompare(a.date),
 );
 
-function formatSermonDate(date: string) {
-  const [year, month, day] = date.split("-").map(Number);
+// A series only gets its own section once it has two or more messages.
+const seriesGroups = Array.from(
+  newestFirst.reduce((groups, video) => {
+    if (video.series) {
+      groups.set(video.series, [...(groups.get(video.series) ?? []), video]);
+    }
+    return groups;
+  }, new Map<string, VideoTeaching[]>()),
+)
+  .filter(([, videos]) => videos.length > 1)
+  .map(([series, videos]) => ({
+    series,
+    // Oldest first inside a series, so Part 1 comes before Part 2.
+    videos: [...videos].reverse(),
+  }));
+
+const seriesNames = new Set(seriesGroups.map((group) => group.series));
+
+function formatSermonDate(date: string, month: "long" | "short" = "long") {
+  const [year, monthIndex, day] = date.split("-").map(Number);
   return new Intl.DateTimeFormat("en-GB", {
     day: "numeric",
-    month: "long",
+    month,
     year: "numeric",
     timeZone: "UTC",
-  }).format(new Date(Date.UTC(year, month - 1, day)));
+  }).format(new Date(Date.UTC(year, monthIndex - 1, day)));
+}
+
+function dateRange(videos: VideoTeaching[]) {
+  const first = videos[0].date;
+  const last = videos[videos.length - 1].date;
+  return first === last
+    ? formatSermonDate(first, "short")
+    : `${formatSermonDate(first, "short")} – ${formatSermonDate(last, "short")}`;
+}
+
+function VideoCard({
+  video,
+  onPlay,
+  className = "",
+}: {
+  video: VideoTeaching;
+  onPlay: (video: VideoTeaching) => void;
+  className?: string;
+}) {
+  return (
+    <article className={`overflow-hidden border border-line bg-background ${className}`}>
+      <button
+        type="button"
+        onClick={() => onPlay(video)}
+        aria-label={`Play ${video.title} by ${video.speaker}`}
+        className="group block w-full text-left"
+      >
+        <div className="relative aspect-video overflow-hidden bg-foreground/[0.04]">
+          <Image
+            src={`https://img.youtube.com/vi/${video.id}/hqdefault.jpg`}
+            alt=""
+            fill
+            unoptimized
+            sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+            className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+          />
+          <div className="absolute inset-0 flex items-center justify-center bg-black/10 transition-colors group-hover:bg-black/25">
+            <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-black shadow-lg transition-transform group-hover:scale-110">
+              <Play size={18} fill="currentColor" className="ml-0.5" />
+            </span>
+          </div>
+        </div>
+        <div className="px-4 py-4">
+          <div className="flex items-center justify-between gap-3">
+            <p className="truncate text-xs font-semibold uppercase tracking-[0.14em] text-muted">
+              {cardLabels[video.occasion]}
+            </p>
+            {video.series && seriesNames.has(video.series) && (
+              <span className="truncate text-xs font-semibold text-muted">
+                {video.series}
+              </span>
+            )}
+          </div>
+          <h3 className="mt-2 font-semibold leading-snug tracking-tight">
+            {video.title}
+          </h3>
+          <p className="mt-2 text-sm text-muted">
+            {video.speaker} <span aria-hidden="true">·</span>{" "}
+            {formatSermonDate(video.date)}
+          </p>
+        </div>
+      </button>
+    </article>
+  );
+}
+
+// One titled section: a sideways-scrolling shelf on phones, a grid from
+// tablet width up.
+function Shelf({
+  title,
+  meta,
+  videos,
+  onPlay,
+}: {
+  title: string;
+  meta: string;
+  videos: VideoTeaching[];
+  onPlay: (video: VideoTeaching) => void;
+}) {
+  return (
+    <section className="border-t border-line pt-6">
+      <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+        <h3 className="text-xl font-semibold tracking-tight sm:text-2xl">{title}</h3>
+        <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted">
+          {meta}
+        </p>
+      </div>
+      <div className="-mx-5 mt-4 flex snap-x snap-mandatory scroll-px-5 gap-4 overflow-x-auto px-5 pb-2 [scrollbar-width:none] sm:mx-0 sm:grid sm:grid-cols-2 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-3">
+        {videos.map((video) => (
+          <VideoCard
+            key={video.id}
+            video={video}
+            onPlay={onPlay}
+            className="w-[78%] shrink-0 snap-start sm:w-auto"
+          />
+        ))}
+      </div>
+    </section>
+  );
 }
 
 export default function TeachingsVideoGrid() {
   const [activeVideo, setActiveVideo] = useState<VideoTeaching | null>(null);
-  const [activeFilter, setActiveFilter] = useState("all");
+  const [occasion, setOccasion] = useState<Occasion | "all">("all");
+  const [series, setSeries] = useState<string | null>(null);
   const [titleSearch, setTitleSearch] = useState("");
 
-  const sortedVideos = [...videoTeachings].sort((a, b) =>
-    b.date.localeCompare(a.date),
-  );
   const searchTerm = titleSearch.trim().toLowerCase();
-  const visibleVideos = sortedVideos.filter((video) => {
-    const matchesFilter =
-      activeFilter === "all" ||
-      (activeFilter === "standalone"
-        ? video.series === null
-        : video.series === activeFilter);
-    const matchesSearch =
-      !searchTerm ||
-      `${video.title} ${video.series ?? ""} ${video.speaker}`
-        .toLowerCase()
-        .includes(searchTerm);
-    return matchesFilter && matchesSearch;
-  });
+  const filtered = searchTerm || occasion !== "all" || series !== null;
 
-  const filterOptions = [
-    { value: "all", label: "All messages" },
-    ...seriesFilters.map((series) => ({ value: series, label: series })),
-    { value: "standalone", label: "Others" },
-  ];
+  const visibleVideos = useMemo(
+    () =>
+      newestFirst.filter(
+        (video) =>
+          (occasion === "all" || video.occasion === occasion) &&
+          (series === null || video.series === series) &&
+          (!searchTerm ||
+            `${video.title} ${video.series ?? ""} ${video.speaker}`
+              .toLowerCase()
+              .includes(searchTerm)),
+      ),
+    [occasion, series, searchTerm],
+  );
 
-  const filterCount = (value: string) => {
-    if (value === "all") return videoTeachings.length;
-    return videoTeachings.filter((video) =>
-      value === "standalone" ? video.series === null : video.series === value,
-    ).length;
+  // The default view: every series as its own section, then the single
+  // messages by occasion.
+  const sections = useMemo(() => {
+    const singles = newestFirst.filter(
+      (video) => !video.series || !seriesNames.has(video.series),
+    );
+    return [
+      ...seriesGroups.map(({ series: name, videos }) => ({
+        key: `series-${name}`,
+        title: name,
+        meta: `Series · ${videos.length} messages · ${dateRange(videos)}`,
+        videos,
+      })),
+      ...OCCASIONS.map((key) => {
+        const videos = singles.filter((video) => video.occasion === key);
+        return {
+          key: `occasion-${key}`,
+          title: shelfTitles[key],
+          meta: `${videos.length} ${videos.length === 1 ? "video" : "videos"}`,
+          videos,
+        };
+      }).filter((section) => section.videos.length > 0),
+    ];
+  }, []);
+
+  const clearFilters = () => {
+    setOccasion("all");
+    setSeries(null);
+    setTitleSearch("");
   };
 
   useEffect(() => {
@@ -75,6 +231,13 @@ export default function TeachingsVideoGrid() {
     };
   }, [activeVideo]);
 
+  const chip = (active: boolean) =>
+    `inline-flex min-h-10 shrink-0 items-center gap-2 border px-3 py-2 text-sm font-semibold transition-colors ${
+      active
+        ? "border-foreground bg-foreground text-background"
+        : "border-line bg-background text-foreground hover:border-foreground"
+    }`;
+
   return (
     <>
       <div className="mt-8 border border-line p-4 sm:p-5">
@@ -84,7 +247,7 @@ export default function TeachingsVideoGrid() {
               Browse the teachings
             </p>
             <p className="mt-1 text-sm text-muted">
-              Search a title or select a series to see its messages.
+              {videoTeachings.length} videos, grouped by series and service.
             </p>
           </div>
           <label className="w-full sm:max-w-xs">
@@ -99,90 +262,83 @@ export default function TeachingsVideoGrid() {
           </label>
         </div>
 
-        <div
-          role="group"
-          aria-label="Filter teachings by series"
-          className="mt-4 flex flex-wrap gap-2"
-        >
-          {filterOptions.map(({ value, label }) => (
+        <div role="group" aria-label="Filter by service" className="mt-4 flex flex-wrap gap-2">
+          <button type="button" onClick={() => setOccasion("all")} aria-pressed={occasion === "all"} className={chip(occasion === "all")}>
+            All <span className="text-xs opacity-70">{videoTeachings.length}</span>
+          </button>
+          {OCCASIONS.map((key) => (
             <button
-              key={value}
+              key={key}
               type="button"
-              onClick={() => setActiveFilter(value)}
-              aria-pressed={activeFilter === value}
-              className={`inline-flex min-h-10 items-center gap-2 border px-3 py-2 text-sm font-semibold transition-colors ${
-                activeFilter === value
-                  ? "border-foreground bg-foreground text-background"
-                  : "border-line bg-background text-foreground hover:border-foreground"
-              }`}
+              onClick={() => setOccasion(key)}
+              aria-pressed={occasion === key}
+              className={chip(occasion === key)}
             >
-              {label}
-              <span className="text-xs opacity-70">{filterCount(value)}</span>
+              {occasionLabels[key]}
+              <span className="text-xs opacity-70">
+                {videoTeachings.filter((video) => video.occasion === key).length}
+              </span>
             </button>
           ))}
         </div>
-        <p className="mt-4 text-xs text-muted" aria-live="polite">
-          Showing {visibleVideos.length} of {videoTeachings.length} messages,
-          newest first.
-        </p>
-      </div>
 
-      {visibleVideos.length > 0 ? (
-        <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {visibleVideos.map((video, index) => (
-            <article
-              key={video.id}
-              className="overflow-hidden border border-line bg-background"
+        <p className="mt-5 text-xs font-semibold uppercase tracking-[0.15em] text-muted">Series</p>
+        <div
+          role="group"
+          aria-label="Filter by series"
+          className="-mx-4 mt-2 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:px-0"
+        >
+          {seriesGroups.map(({ series: name, videos }) => (
+            <button
+              key={name}
+              type="button"
+              onClick={() => setSeries(series === name ? null : name)}
+              aria-pressed={series === name}
+              className={chip(series === name)}
             >
-              <button
-                type="button"
-                onClick={() => setActiveVideo(video)}
-                aria-label={`Play ${video.title} by ${video.speaker}`}
-                className="group block w-full text-left"
-              >
-                <div className="relative aspect-video overflow-hidden bg-foreground/[0.04]">
-                  <Image
-                    src={`https://img.youtube.com/vi/${video.id}/hqdefault.jpg`}
-                    alt=""
-                    fill
-                    unoptimized
-                    sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                    className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
-                  />
-                  <div className="absolute inset-0 flex items-center justify-center bg-black/10 transition-colors group-hover:bg-black/25">
-                    <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-black shadow-lg transition-transform group-hover:scale-110">
-                      <Play size={18} fill="currentColor" className="ml-0.5" />
-                    </span>
-                  </div>
-                </div>
-                <div className="px-4 py-4">
-                  <div className="flex items-center justify-between gap-3">
-                    <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted">
-                      Message {String(index + 1).padStart(2, "0")}
-                    </p>
-                    {video.series && (
-                      <span className="truncate text-xs font-semibold text-muted">
-                        {video.series}
-                      </span>
-                    )}
-                  </div>
-                  <h3 className="mt-2 font-semibold leading-snug tracking-tight">
-                    {video.title}
-                  </h3>
-                  <p className="mt-2 text-sm text-muted">
-                    {video.speaker} <span aria-hidden="true">·</span>{" "}
-                    {formatSermonDate(video.date)}
-                  </p>
-                </div>
-              </button>
-            </article>
+              {name} <span className="text-xs opacity-70">{videos.length}</span>
+            </button>
           ))}
         </div>
+
+        {filtered && (
+          <p className="mt-4 flex flex-wrap items-center gap-x-3 text-xs text-muted" aria-live="polite">
+            Showing {visibleVideos.length} of {videoTeachings.length} videos, newest first.
+            <button type="button" onClick={clearFilters} className="font-semibold text-foreground underline underline-offset-4">
+              Clear filters
+            </button>
+          </p>
+        )}
+      </div>
+
+      {filtered ? (
+        visibleVideos.length > 0 ? (
+          <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {visibleVideos.map((video) => (
+              <VideoCard key={video.id} video={video} onPlay={setActiveVideo} />
+            ))}
+          </div>
+        ) : (
+          <p className="mt-5 border border-line px-5 py-8 text-center text-sm text-muted">
+            No videos match. Try another search or{" "}
+            <button type="button" onClick={clearFilters} className="font-semibold text-foreground underline underline-offset-4">
+              clear the filters
+            </button>
+            .
+          </p>
+        )
       ) : (
-        <p className="mt-5 border border-line px-5 py-8 text-center text-sm text-muted">
-          No messages match that title. Try another search or choose a different
-          series.
-        </p>
+        <div className="mt-10 space-y-12 sm:space-y-14">
+          {sections.map((section) => (
+            <Shelf
+              key={section.key}
+              title={section.title}
+              meta={section.meta}
+              videos={section.videos}
+              onPlay={setActiveVideo}
+            />
+          ))}
+        </div>
       )}
 
       {activeVideo &&

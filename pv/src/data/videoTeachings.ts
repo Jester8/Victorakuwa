@@ -1,18 +1,304 @@
+export type Occasion = "sunday" | "midweek" | "prayer" | "conversation";
+
 export type VideoTeaching = {
   id: string;
   title: string;
   speaker: string;
   date: string;
   series: string | null;
+  // Which kind of gathering the video is from; the teachings page groups by it.
+  occasion: Occasion;
 };
 
+export const occasionLabels: Record<Occasion, string> = {
+  sunday: "Sunday services",
+  midweek: "Midweek services",
+  prayer: "Prayer & worship",
+  conversation: "Conversations & moments",
+};
+
+// Every video on the Davidic Generation Church channel (youtube.com/@davidicgenerationchurch)
+// that names Pastor Victor Akuwa, plus the messages added by hand before that.
 export const videoTeachings: VideoTeaching[] = [
+  {
+    id: "0nB8pQPfqhA",
+    title: "The Law of Order",
+    speaker: "Pastor Victor Akuwa",
+    date: "2022-05-15",
+    series: null,
+    occasion: "sunday",
+  },
+  {
+    id: "FnhoEvHHoWo",
+    title: "Funny Moments: The Orderly Unit Mimicking the Pastorate",
+    speaker: "Davidic Generation Church",
+    date: "2023-12-08",
+    series: null,
+    occasion: "conversation",
+  },
+  {
+    id: "NxrSKITL-x4",
+    title: "Q&A Session with Pastor Victor Akuwa",
+    speaker: "Davidic Generation Church",
+    date: "2024-03-11",
+    series: null,
+    occasion: "conversation",
+  },
+  {
+    id: "AWZ07Bwgv9k",
+    title: "Celebrating Our Resident Pastor",
+    speaker: "Davidic Generation Church",
+    date: "2024-10-06",
+    series: null,
+    occasion: "conversation",
+  },
+  {
+    id: "STCxJX1KmiU",
+    title: "Behind the Pulpit — DGC at 3",
+    speaker: "Davidic Generation Church",
+    date: "2024-11-07",
+    series: null,
+    occasion: "conversation",
+  },
+  {
+    id: "kkAxh9NPxKc",
+    title: "Understanding — Part 3",
+    speaker: "Pastor Victor Akuwa",
+    date: "2025-01-26",
+    series: "Understanding",
+    occasion: "sunday",
+  },
+  {
+    id: "_hOPLTk8WS8",
+    title: "Understanding — Part 2B",
+    speaker: "Pastor Victor Akuwa",
+    date: "2025-01-26",
+    series: "Understanding",
+    occasion: "sunday",
+  },
+  {
+    id: "3OR_hL_LfPQ",
+    title: "Understanding — Part 2A",
+    speaker: "Pastor Victor Akuwa",
+    date: "2025-01-26",
+    series: "Understanding",
+    occasion: "sunday",
+  },
+  {
+    id: "KezWu-J6Kv4",
+    title: "Midweek Service",
+    speaker: "Pastor Victor Akuwa",
+    date: "2025-01-29",
+    series: null,
+    occasion: "midweek",
+  },
+  {
+    id: "8HHGF8VuD3k",
+    title: "Understanding Death — Part 1",
+    speaker: "Pastor Victor Akuwa",
+    date: "2025-02-19",
+    series: "Understanding Death",
+    occasion: "midweek",
+  },
+  {
+    id: "Gmf23iVMtRA",
+    title: "Understanding Death — Part 2",
+    speaker: "Pastor Victor Akuwa",
+    date: "2025-02-26",
+    series: "Understanding Death",
+    occasion: "midweek",
+  },
+  {
+    id: "WE6GwyrrqbA",
+    title: "Spirit of Faith — Part 2",
+    speaker: "Pastor Victor Akuwa",
+    date: "2025-03-30",
+    series: "Spirit of Faith",
+    occasion: "sunday",
+  },
+  {
+    id: "7nZZh6a5N2g",
+    title: "Spirit of Faith — Part 1",
+    speaker: "Pastor Victor Akuwa",
+    date: "2025-03-30",
+    series: "Spirit of Faith",
+    occasion: "sunday",
+  },
+  {
+    id: "1VgwyPnSTXk",
+    title: "The Old Rugged Faith",
+    speaker: "Pastor Victor Akuwa",
+    date: "2025-04-13",
+    series: null,
+    occasion: "sunday",
+  },
+  {
+    id: "BPrML0hZ3s8",
+    title: "Scapegoat (Easter Sunday)",
+    speaker: "Pastor Victor Akuwa",
+    date: "2025-04-20",
+    series: null,
+    occasion: "sunday",
+  },
+  {
+    id: "epi9CDvVVxk",
+    title: "Spiritual Protocol — Part 1",
+    speaker: "Pastor Victor Akuwa",
+    date: "2025-04-23",
+    series: "Spiritual Protocol",
+    occasion: "midweek",
+  },
+  {
+    id: "fDvTxJrw3P8",
+    title: "The Mimshach Anointing",
+    speaker: "Pastor Victor Akuwa",
+    date: "2025-05-25",
+    series: null,
+    occasion: "sunday",
+  },
+  {
+    id: "0m6iEdZ3Z8A",
+    title: "Who Let the Dogs Out?",
+    speaker: "Pastor Victor Akuwa",
+    date: "2025-06-04",
+    series: null,
+    occasion: "midweek",
+  },
+  {
+    id: "Ni7hh_KWZvI",
+    title: "Ekklesia",
+    speaker: "Pastor Victor Akuwa",
+    date: "2025-06-22",
+    series: null,
+    occasion: "sunday",
+  },
+  {
+    id: "T6lgXRLDR7M",
+    title: "Navigation",
+    speaker: "Pastor Victor Akuwa",
+    date: "2025-06-29",
+    series: "Navigation",
+    occasion: "sunday",
+  },
+  {
+    id: "pijlyroX5jI",
+    title: "Navigating by Instructions",
+    speaker: "Pastor Victor Akuwa",
+    date: "2025-07-13",
+    series: "Navigation",
+    occasion: "sunday",
+  },
+  {
+    id: "L3-CwLnX060",
+    title: "Boldness",
+    speaker: "Pastor Victor Akuwa",
+    date: "2025-07-30",
+    series: null,
+    occasion: "midweek",
+  },
+  {
+    id: "6O3XPDc9Dlw",
+    title: "The Healing Ministry of Jesus",
+    speaker: "Pastor Victor Akuwa",
+    date: "2025-08-20",
+    series: null,
+    occasion: "midweek",
+  },
+  {
+    id: "NCdSmzrA7aY",
+    title: "Everything by Prayer",
+    speaker: "Pastor Victor Akuwa",
+    date: "2025-08-24",
+    series: null,
+    occasion: "sunday",
+  },
+  {
+    id: "zUDEqoY0amE",
+    title: "Discernment from the Place of Prayer",
+    speaker: "Pastor Victor Akuwa",
+    date: "2025-09-07",
+    series: null,
+    occasion: "sunday",
+  },
+  {
+    id: "jiJlmBv1V8Q",
+    title: "Bushel — Part 1",
+    speaker: "Pastor Victor Akuwa",
+    date: "2025-09-17",
+    series: "Bushel",
+    occasion: "midweek",
+  },
+  {
+    id: "-UXQsOkTiyo",
+    title: "Bushel — Part 2",
+    speaker: "Pastor Victor Akuwa",
+    date: "2025-09-21",
+    series: "Bushel",
+    occasion: "sunday",
+  },
+  {
+    id: "EVTr6YTmraQ",
+    title: "Bushel — Part 3",
+    speaker: "Pastor Victor Akuwa",
+    date: "2025-09-24",
+    series: "Bushel",
+    occasion: "midweek",
+  },
+  {
+    id: "_sU6WL5iNAk",
+    title: "True Riches",
+    speaker: "Pastor Victor Akuwa",
+    date: "2025-10-05",
+    series: null,
+    occasion: "sunday",
+  },
+  {
+    id: "Q3cTtGH0jLc",
+    title: "Strength to Birth",
+    speaker: "Pastor Victor Akuwa",
+    date: "2025-10-13",
+    series: "500 Hours Prayer Charge",
+    occasion: "prayer",
+  },
+  {
+    id: "dKu_vzx0hHQ",
+    title: "Weight — Part 3",
+    speaker: "Pastor Victor Akuwa",
+    date: "2025-10-24",
+    series: "500 Hours Prayer Charge",
+    occasion: "prayer",
+  },
+  {
+    id: "1fSEEatozNc",
+    title: "The Identity of the Man in Christ",
+    speaker: "Pastor Victor Akuwa",
+    date: "2025-11-17",
+    series: "500 Hours Prayer Charge",
+    occasion: "prayer",
+  },
+  {
+    id: "cEtgm-yEiCo",
+    title: "Thanksgiving — Part 2",
+    speaker: "Pastor Victor Akuwa",
+    date: "2025-12-28",
+    series: null,
+    occasion: "sunday",
+  },
+  {
+    id: "u3-g5TQPy0o",
+    title: "Order: Requirement for Alignment",
+    speaker: "Pastor Victor Akuwa",
+    date: "2026-01-21",
+    series: null,
+    occasion: "midweek",
+  },
   {
     id: "J1Qxhs79sG4",
     title: "Faith to Take the City: Being in Alignment with God's Word",
     speaker: "Pastor Victor Akuwa",
     date: "2026-02-11",
     series: null,
+    occasion: "midweek",
   },
   {
     id: "hzvkg8eoObM",
@@ -20,6 +306,7 @@ export const videoTeachings: VideoTeaching[] = [
     speaker: "Pastor Victor Akuwa",
     date: "2026-02-18",
     series: "Spiritual Protocol",
+    occasion: "midweek",
   },
   {
     id: "xkTDhTahULA",
@@ -27,6 +314,7 @@ export const videoTeachings: VideoTeaching[] = [
     speaker: "Pastor Victor Akuwa",
     date: "2026-02-22",
     series: null,
+    occasion: "sunday",
   },
   {
     id: "0JGOez6bLMs",
@@ -34,6 +322,7 @@ export const videoTeachings: VideoTeaching[] = [
     speaker: "Pastor Victor Akuwa",
     date: "2026-04-15",
     series: "Rest by Authority",
+    occasion: "midweek",
   },
   {
     id: "vD8im3EJyV8",
@@ -41,6 +330,7 @@ export const videoTeachings: VideoTeaching[] = [
     speaker: "Pastor Victor Akuwa",
     date: "2026-04-22",
     series: "Rest by Authority",
+    occasion: "midweek",
   },
   {
     id: "Zt-SCIwMXc8",
@@ -48,6 +338,15 @@ export const videoTeachings: VideoTeaching[] = [
     speaker: "Pastor Victor Akuwa",
     date: "2026-05-03",
     series: "Faith for Rest",
+    occasion: "sunday",
+  },
+  {
+    id: "k00za2si1zM",
+    title: "Faith for Rest — Part 4",
+    speaker: "Pastor Victor Akuwa",
+    date: "2026-05-10",
+    series: "Faith for Rest",
+    occasion: "sunday",
   },
   {
     id: "DRkBnCIc3EQ",
@@ -55,6 +354,7 @@ export const videoTeachings: VideoTeaching[] = [
     speaker: "Pastor Victor Akuwa",
     date: "2026-05-13",
     series: null,
+    occasion: "midweek",
   },
   {
     id: "TBPqeNqqMnc",
@@ -62,6 +362,7 @@ export const videoTeachings: VideoTeaching[] = [
     speaker: "Davidic Generation Church Ibadan",
     date: "2026-05-27",
     series: null,
+    occasion: "prayer",
   },
   {
     id: "mrYF5aVcsiI",
@@ -69,6 +370,7 @@ export const videoTeachings: VideoTeaching[] = [
     speaker: "Pastor Victor Akuwa",
     date: "2026-05-31",
     series: "What Do You See?",
+    occasion: "sunday",
   },
   {
     id: "7sg3QFYFKFk",
@@ -76,6 +378,23 @@ export const videoTeachings: VideoTeaching[] = [
     speaker: "Pastor Victor Akuwa",
     date: "2026-05-31",
     series: "What Do You See?",
+    occasion: "sunday",
+  },
+  {
+    id: "T3uAb873XW0",
+    title: "Children Interviewing PV & Mama D",
+    speaker: "Davidic Generation Church",
+    date: "2026-05-31",
+    series: null,
+    occasion: "conversation",
+  },
+  {
+    id: "6kBTN6Zj7Gk",
+    title: "What Do You See? — Part 3 (Midweek)",
+    speaker: "Pastor Victor Akuwa",
+    date: "2026-06-03",
+    series: "What Do You See?",
+    occasion: "midweek",
   },
   {
     id: "UJF6zQexxT4",
@@ -83,6 +402,7 @@ export const videoTeachings: VideoTeaching[] = [
     speaker: "Pastor Victor Akuwa",
     date: "2026-06-21",
     series: null,
+    occasion: "sunday",
   },
   {
     id: "CGxL1sBQsGM",
@@ -90,6 +410,7 @@ export const videoTeachings: VideoTeaching[] = [
     speaker: "Pastor Victor Akuwa",
     date: "2026-06-28",
     series: null,
+    occasion: "prayer",
   },
   {
     id: "C7kxr6HPYZE",
@@ -97,6 +418,7 @@ export const videoTeachings: VideoTeaching[] = [
     speaker: "Pastor Victor Akuwa",
     date: "2026-07-05",
     series: "The Blessing of Focus",
+    occasion: "sunday",
   },
   {
     id: "B70PTbtXJ3s",
@@ -104,6 +426,7 @@ export const videoTeachings: VideoTeaching[] = [
     speaker: "Pastor Victor Akuwa",
     date: "2026-07-08",
     series: "The Blessing of Focus",
+    occasion: "midweek",
   },
   {
     id: "NxMDd5Be3vc",
@@ -111,6 +434,7 @@ export const videoTeachings: VideoTeaching[] = [
     speaker: "Pastor Victor Akuwa",
     date: "2026-07-12",
     series: "Witnesses",
+    occasion: "sunday",
   },
   {
     id: "lOXfe5FiknA",
@@ -118,6 +442,7 @@ export const videoTeachings: VideoTeaching[] = [
     speaker: "Pastor Lawrence Oyor",
     date: "2026-07-15",
     series: null,
+    occasion: "midweek",
   },
   {
     id: "cdFXumc-Ov8",
@@ -125,6 +450,7 @@ export const videoTeachings: VideoTeaching[] = [
     speaker: "Pastor Victor Akuwa",
     date: "2026-07-19",
     series: "Witnesses",
+    occasion: "sunday",
   },
   {
     id: "6S6Coh0Cijw",
@@ -132,6 +458,7 @@ export const videoTeachings: VideoTeaching[] = [
     speaker: "Davidic Generation Church Ibadan",
     date: "2026-07-22",
     series: null,
+    occasion: "midweek",
   },
   {
     id: "a8T35t-zumk",
@@ -139,6 +466,7 @@ export const videoTeachings: VideoTeaching[] = [
     speaker: "Pastor Victor Akuwa",
     date: "2026-07-26",
     series: "Witnesses",
+    occasion: "sunday",
   },
   {
     id: "69Sh4GHpnIQ",
@@ -146,6 +474,7 @@ export const videoTeachings: VideoTeaching[] = [
     speaker: "Pastor Victor Akuwa",
     date: "2026-08-02",
     series: "Witnesses",
+    occasion: "sunday",
   },
   {
     id: "9qOK1_iWL1E",
@@ -153,6 +482,7 @@ export const videoTeachings: VideoTeaching[] = [
     speaker: "Pastor Victor Akuwa",
     date: "2026-08-12",
     series: "Witnesses",
+    occasion: "midweek",
   },
   {
     id: "VW5o8Fjf7Ig",
@@ -160,6 +490,7 @@ export const videoTeachings: VideoTeaching[] = [
     speaker: "Pastor Victor Akuwa",
     date: "2026-08-19",
     series: "Witnesses",
+    occasion: "midweek",
   },
   {
     id: "LDyVQbcmhOg",
@@ -167,6 +498,7 @@ export const videoTeachings: VideoTeaching[] = [
     speaker: "Pastor Victor Akuwa",
     date: "2026-09-06",
     series: "Witnesses",
+    occasion: "sunday",
   },
   {
     id: "Z1SxIGSLiuQ",
@@ -174,6 +506,7 @@ export const videoTeachings: VideoTeaching[] = [
     speaker: "Davidic Generation Church Ibadan",
     date: "2026-09-09",
     series: null,
+    occasion: "midweek",
   },
   {
     id: "jwFvQpT5_n4",
@@ -181,6 +514,7 @@ export const videoTeachings: VideoTeaching[] = [
     speaker: "Davidic Generation Church Ibadan",
     date: "2026-09-13",
     series: null,
+    occasion: "sunday",
   },
   {
     id: "FM0T-_uojZc",
@@ -188,6 +522,7 @@ export const videoTeachings: VideoTeaching[] = [
     speaker: "Davidic Generation Church Ibadan",
     date: "2026-09-20",
     series: null,
+    occasion: "prayer",
   },
   {
     id: "zTD-to2QOfg",
@@ -195,6 +530,7 @@ export const videoTeachings: VideoTeaching[] = [
     speaker: "Davidic Generation Church Ibadan",
     date: "2026-09-23",
     series: null,
+    occasion: "midweek",
   },
   {
     id: "5Lq6QTOYIEE",
@@ -202,20 +538,23 @@ export const videoTeachings: VideoTeaching[] = [
     speaker: "Pastor Victor Akuwa",
     date: "2026-09-27",
     series: "Kingdom Code",
+    occasion: "sunday",
   },
   {
     id: "noMaxiU2zJo",
-    title: "Kingdom Code — Part 2",
+    title: "Kingdom Code — Part 2 (Midweek)",
     speaker: "Pastor Victor Akuwa",
     date: "2026-09-30",
     series: "Kingdom Code",
+    occasion: "midweek",
   },
   {
     id: "qsdyz3R1uLk",
-    title: "Kingdom Code — Part 2",
+    title: "Kingdom Code — Part 2 (Sunday)",
     speaker: "Pastor Victor Akuwa",
     date: "2026-10-04",
     series: "Kingdom Code",
+    occasion: "sunday",
   },
   {
     id: "hc7jdWJyCyI",
@@ -223,6 +562,7 @@ export const videoTeachings: VideoTeaching[] = [
     speaker: "Pastor Victor Akuwa",
     date: "2026-10-11",
     series: "Kingdom Code",
+    occasion: "sunday",
   },
   {
     id: "RSN5iFVnWgs",
@@ -230,5 +570,6 @@ export const videoTeachings: VideoTeaching[] = [
     speaker: "Davidic Generation Church Ibadan",
     date: "2026-10-18",
     series: null,
+    occasion: "sunday",
   },
 ];
