@@ -72,7 +72,7 @@ export default function About() {
               Ibadan, Oyo State
             </h2>
             <p className="mt-5 leading-relaxed text-muted">
-              Born in Ibadan, Oyo State, Nigeria, PV is the fourth of five
+              Born in Ibadan, Oyo State, Nigeria, PV is the h of five
               children in the Akuwa family and hails from Isiala-Ngwa North
               Local Government Area of Abia State. Raised in Agbowo, Ibadan,
               his journey has been shaped by an unwavering commitment to
