@@ -713,14 +713,6 @@ export const videoTeachings: VideoTeaching[] = [
     occasion: "sunday",
   },
   {
-    id: "lOXfe5FiknA",
-    title: "Strength",
-    speaker: "Pastor Lawrence Oyor",
-    date: "2026-07-15",
-    series: null,
-    occasion: "midweek",
-  },
-  {
     id: "cdFXumc-Ov8",
     title: "Witnesses — Part 2",
     speaker: "Pastor Victor Akuwa",
@@ -914,10 +906,10 @@ export const videoTeachings: VideoTeaching[] = [
   },
   {
     id: "RSN5iFVnWgs",
-    title: "Sunday Service",
-    speaker: "Davidic Generation Church Ibadan",
+    title: "Kingdom Code — Part 5",
+    speaker: "Pastor Victor Akuwa",
     date: "2026-10-18",
-    series: null,
+    series: "Kingdom Code",
     occasion: "sunday",
   },
   {
