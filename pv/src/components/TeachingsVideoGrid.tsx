@@ -18,7 +18,9 @@ const shelfTitles: Record<Occasion, string> = {
   sunday: "More Sunday services",
   midweek: "More midweek services",
   prayer: "More prayer & worship",
-  conversation: "Conversations & moments",
+  conference: "Conferences & guest ministrations",
+  conversation: "Interviews & moments",
+  music: "Music",
 };
 
 // The small label on each card.
@@ -26,7 +28,9 @@ const cardLabels: Record<Occasion, string> = {
   sunday: "Sunday service",
   midweek: "Midweek service",
   prayer: "Prayer & worship",
-  conversation: "Conversation",
+  conference: "Conference",
+  conversation: "Interview & moment",
+  music: "Music",
 };
 
 const newestFirst = [...videoTeachings].sort((a, b) =>
