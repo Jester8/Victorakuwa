@@ -1,8 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useEffect, useState, type ReactNode } from "react";
+import { usePrefersReducedMotion, useSiteSettings } from "@/components/SiteSettings";
 
 const slides = [
   {
@@ -24,22 +24,25 @@ const slides = [
 ];
 
 export default function HeroCarousel({ children }: { children: ReactNode }) {
-  const [activeSlide, setActiveSlide] = useState(0);
-  const prefersReducedMotion = useReducedMotion();
-
-  useEffect(() => {
-    if (prefersReducedMotion !== false) return;
-
-    const timer = window.setInterval(() => {
-      setActiveSlide((current) => (current + 1) % slides.length);
-    }, 7000);
-
-    return () => window.clearInterval(timer);
-  }, [prefersReducedMotion]);
+  const { heroAutoplay, heroSeconds } = useSiteSettings();
+  // Only the current and previous slides are mounted, so later photos download when they're due.
+  const [{ active, previous }, setSlides] = useState({ active: 0, previous: -1 });
+  const reduced = usePrefersReducedMotion();
 
   const showSlide = (index: number) => {
-    setActiveSlide((index + slides.length) % slides.length);
+    setSlides(({ active: current }) => {
+      const next = (index + slides.length) % slides.length;
+      return next === current ? { active: current, previous: -1 } : { active: next, previous: current };
+    });
   };
+
+  useEffect(() => {
+    if (!heroAutoplay || reduced) return;
+    const timer = window.setInterval(() => {
+      setSlides(({ active: current }) => ({ active: (current + 1) % slides.length, previous: current }));
+    }, heroSeconds * 1000);
+    return () => window.clearInterval(timer);
+  }, [heroAutoplay, heroSeconds, reduced, active]);
 
   return (
     <section
@@ -48,31 +51,27 @@ export default function HeroCarousel({ children }: { children: ReactNode }) {
       className="relative flex h-[88svh] min-h-[560px] max-h-[860px] w-full items-end overflow-hidden bg-background"
     >
       <div className="absolute inset-0" aria-live="off">
-        <AnimatePresence initial={false} mode="wait">
-          <motion.div
-            key={slides[activeSlide].src}
-            initial={{ opacity: 0, scale: prefersReducedMotion ? 1 : 1.025 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{
-              duration: prefersReducedMotion ? 0.1 : 0.7,
-              ease: "easeOut",
-            }}
-            className="absolute inset-0"
-            role="group"
-            aria-roledescription="slide"
-            aria-label={`${activeSlide + 1} of ${slides.length}`}
-          >
-            <Image
-              src={slides[activeSlide].src}
-              alt={slides[activeSlide].alt}
-              fill
-              preload={activeSlide === 0}
-              sizes="100vw"
-              className="object-cover object-top"
-            />
-          </motion.div>
-        </AnimatePresence>
+        {[previous, active].map((index) =>
+          index < 0 ? null : (
+            <div
+              key={slides[index].src}
+              className={`absolute inset-0 ${index === active && previous >= 0 ? "hero-slide-in" : ""}`}
+              role="group"
+              aria-roledescription="slide"
+              aria-label={`${index + 1} of ${slides.length}`}
+              aria-hidden={index !== active}
+            >
+              <Image
+                src={slides[index].src}
+                alt={slides[index].alt}
+                fill
+                preload={index === 0}
+                sizes="100vw"
+                className="object-cover object-top"
+              />
+            </div>
+          )
+        )}
       </div>
       <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/10" />
 
@@ -90,10 +89,10 @@ export default function HeroCarousel({ children }: { children: ReactNode }) {
                 key={slide.src}
                 type="button"
                 aria-label={`Show slide ${index + 1}`}
-                aria-pressed={activeSlide === index}
+                aria-pressed={active === index}
                 onClick={() => showSlide(index)}
                 className={`h-2.5 rounded-full transition-[width,background-color] duration-300 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white ${
-                  activeSlide === index
+                  active === index
                     ? "w-8 bg-white"
                     : "w-2.5 bg-white/55 hover:bg-white/80"
                 }`}

@@ -16,7 +16,27 @@ export const CORNERS = {
 } as const;
 export type CornerKey = keyof typeof CORNERS;
 
-export type Theme = {
+export const MOTION = {
+  full: { label: "Full", duration: 0.7, distance: 24 },
+  subtle: { label: "Subtle", duration: 0.4, distance: 10 },
+  off: { label: "Off", duration: 0, distance: 0 },
+} as const;
+export type MotionKey = keyof typeof MOTION;
+
+/** Animations and optional features the admin can switch on and off. */
+export type SiteFeatures = {
+  motion: MotionKey;
+  smoothScroll: boolean;
+  typewriter: boolean;
+  heroAutoplay: boolean;
+  heroSeconds: number;
+  bookAutoScroll: boolean;
+  booksPopup: boolean;
+  popupDelay: number;
+  scrollToTop: boolean;
+};
+
+export type Theme = SiteFeatures & {
   background: string;
   foreground: string;
   muted: string;
@@ -27,7 +47,22 @@ export type Theme = {
   corners: CornerKey;
 };
 
-export const DEFAULT_THEME: Theme = {
+export const DEFAULT_FEATURES: SiteFeatures = {
+  motion: "full",
+  smoothScroll: true,
+  typewriter: true,
+  heroAutoplay: true,
+  heroSeconds: 7,
+  bookAutoScroll: true,
+  booksPopup: true,
+  popupDelay: 0.5,
+  scrollToTop: true,
+};
+
+/** Presets change the look only; they keep whatever animations and features are set. */
+export type Look = Omit<Theme, keyof SiteFeatures>;
+
+const ORIGINAL_LOOK: Look = {
   background: "#ffffff",
   foreground: "#000000",
   muted: "#555555",
@@ -38,8 +73,10 @@ export const DEFAULT_THEME: Theme = {
   corners: "round",
 };
 
-export const PRESETS: { name: string; theme: Theme }[] = [
-  { name: "Original black & white", theme: DEFAULT_THEME },
+export const DEFAULT_THEME: Theme = { ...ORIGINAL_LOOK, ...DEFAULT_FEATURES };
+
+export const PRESETS: { name: string; theme: Look }[] = [
+  { name: "Original black & white", theme: ORIGINAL_LOOK },
   {
     name: "Royal purple",
     theme: { background: "#fdfbff", foreground: "#1d1033", muted: "#5d5370", line: "#e8e1f2", accent: "#6a2fc4", bodyFont: "manrope", headingFont: "playfair", corners: "round" },
@@ -64,7 +101,14 @@ export const PRESETS: { name: string; theme: Theme }[] = [
 
 const HEX = /^#[0-9a-f]{6}$/i;
 
-/** Returns a clean theme, or null if anything is malformed. Never trusts the client's shape. */
+const bool = (v: unknown, fallback: boolean) => (typeof v === "boolean" ? v : fallback);
+const num = (v: unknown, fallback: number, min: number, max: number) =>
+  typeof v === "number" && Number.isFinite(v) ? Math.min(max, Math.max(min, v)) : fallback;
+
+/**
+ * Returns a clean theme, or null if anything is malformed. Never trusts the client's shape.
+ * Features missing from versions saved before they existed fall back to the defaults.
+ */
 export function parseTheme(input: unknown): Theme | null {
   if (!input || typeof input !== "object") return null;
   const t = input as Record<string, unknown>;
@@ -73,6 +117,7 @@ export function parseTheme(input: unknown): Theme | null {
   if (typeof t.bodyFont !== "string" || !(t.bodyFont in FONTS)) return null;
   if (typeof t.headingFont !== "string" || !(t.headingFont in FONTS)) return null;
   if (typeof t.corners !== "string" || !(t.corners in CORNERS)) return null;
+  const d = DEFAULT_FEATURES;
   return {
     background: (t.background as string).toLowerCase(),
     foreground: (t.foreground as string).toLowerCase(),
@@ -82,6 +127,15 @@ export function parseTheme(input: unknown): Theme | null {
     bodyFont: t.bodyFont as FontKey,
     headingFont: t.headingFont as FontKey,
     corners: t.corners as CornerKey,
+    motion: typeof t.motion === "string" && t.motion in MOTION ? (t.motion as MotionKey) : d.motion,
+    smoothScroll: bool(t.smoothScroll, d.smoothScroll),
+    typewriter: bool(t.typewriter, d.typewriter),
+    heroAutoplay: bool(t.heroAutoplay, d.heroAutoplay),
+    heroSeconds: Math.round(num(t.heroSeconds, d.heroSeconds, 3, 20)),
+    bookAutoScroll: bool(t.bookAutoScroll, d.bookAutoScroll),
+    booksPopup: bool(t.booksPopup, d.booksPopup),
+    popupDelay: Math.round(num(t.popupDelay, d.popupDelay, 0, 60) * 10) / 10,
+    scrollToTop: bool(t.scrollToTop, d.scrollToTop),
   };
 }
 
@@ -126,15 +180,18 @@ export function themeVars(theme: Theme): Record<string, string> {
     "--accent": theme.accent,
     "--font-body": `var(${FONTS[theme.bodyFont].variable})`,
     "--font-heading": `var(${FONTS[theme.headingFont].variable})`,
+    "--motion-duration": `${MOTION[theme.motion].duration}s`,
+    "--motion-distance": `${MOTION[theme.motion].distance}px`,
     ...Object.fromEntries(Object.entries(RADII).map(([k, rem]) => [`--radius-${k}`, `${+(rem * scale).toFixed(3)}rem`])),
   };
 }
 
-export function themeCss(theme: Theme) {
+/** `preview` raises specificity so a draft wins over the published theme's style tag. */
+export function themeCss(theme: Theme, { preview = false } = {}) {
   const body = Object.entries(themeVars(theme))
     .map(([k, v]) => `${k}:${v};`)
     .join("");
-  return `:root{${body}}`;
+  return `${preview ? "html:root" : ":root"}{${body}}`;
 }
 
 export function sameTheme(a: Theme, b: Theme) {

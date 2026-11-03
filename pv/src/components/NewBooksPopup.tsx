@@ -3,37 +3,49 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight, X } from "lucide-react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { isAdminPreviewFrame, useSiteSettings } from "@/components/SiteSettings";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { latestBooks } from "@/data/books";
 
 const hiddenKey = "pv-new-books-popup-disabled";
 
 export default function NewBooksPopup() {
+  const { booksPopup, popupDelay } = useSiteSettings();
   const [isOpen, setIsOpen] = useState(false);
+  const [closing, setClosing] = useState(false);
   const [dontShowAgain, setDontShowAgain] = useState(false);
   const dialogRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
-  const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
+    if (!booksPopup) return;
     // Readers arriving on a blog post (often from a shared link) shouldn't be interrupted.
     if (window.location.pathname.startsWith("/blog/")) return;
 
-    try {
-      if (window.localStorage.getItem(hiddenKey) === "1") return;
-    } catch {
-      // Continue showing the popup when the browser blocks local storage.
+    // The admin's preview ignores "don't show again" so the popup setting can be checked.
+    if (!isAdminPreviewFrame()) {
+      try {
+        if (window.localStorage.getItem(hiddenKey) === "1") return;
+      } catch {
+        // Continue showing the popup when the browser blocks local storage.
+      }
     }
 
     const timer = window.setTimeout(() => {
       setIsOpen(true);
-    }, 500);
+    }, popupDelay * 1000);
 
     return () => window.clearTimeout(timer);
-  }, []);
+  }, [booksPopup, popupDelay]);
 
-  const close = useCallback(() => setIsOpen(false), []);
+  // Plays the closing animation, then removes the dialog.
+  const close = useCallback(() => {
+    setClosing(true);
+    window.setTimeout(() => {
+      setIsOpen(false);
+      setClosing(false);
+    }, 200);
+  }, []);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -74,37 +86,23 @@ export default function NewBooksPopup() {
   }, [close, isOpen]);
 
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <motion.div
-          className="fixed inset-0 z-[100] flex items-center justify-center overflow-y-auto bg-black/75 p-4 sm:p-6"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: prefersReducedMotion ? 0.01 : 0.22 }}
+    <>
+      {isOpen && booksPopup && (
+        <div
+          className={`fixed inset-0 z-[100] flex items-center justify-center overflow-y-auto bg-black/75 p-4 sm:p-6 ${
+            closing ? "popup-backdrop-out" : "popup-backdrop-in"
+          }`}
           onMouseDown={(event) => {
             if (event.target === event.currentTarget) close();
           }}
         >
-          <motion.div
+          <div
             ref={dialogRef}
             role="dialog"
             aria-modal="true"
             aria-labelledby="new-books-title"
             tabIndex={-1}
-            initial={{
-              opacity: 0,
-              y: prefersReducedMotion ? 0 : 18,
-              scale: prefersReducedMotion ? 1 : 0.98,
-            }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{
-              opacity: 0,
-              y: prefersReducedMotion ? 0 : 10,
-              scale: prefersReducedMotion ? 1 : 0.99,
-            }}
-            transition={{ duration: prefersReducedMotion ? 0.01 : 0.28 }}
-            className="relative my-auto max-h-[92svh] w-full max-w-3xl overflow-y-auto border border-line bg-background p-5 shadow-2xl sm:p-8"
+            className={`${closing ? "popup-out" : "popup-in"} relative my-auto max-h-[92svh] w-full max-w-3xl overflow-y-auto border border-line bg-background p-5 shadow-2xl sm:p-8`}
           >
             <button
               ref={closeButtonRef}
@@ -181,9 +179,9 @@ export default function NewBooksPopup() {
               />
               Don&rsquo;t show this again
             </label>
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
       )}
-    </AnimatePresence>
+    </>
   );
 }

@@ -6,8 +6,10 @@ export const SITE_DESCRIPTION =
 
 // Set NEXT_PUBLIC_SITE_URL once the custom domain is live; until then Vercel's
 // production domain is used so links in previews and the sitemap are absolute.
+// Only used on the server, so it needs no NEXT_PUBLIC_ prefix. The old name still works.
 export const SITE_URL = (
-  process.env.NEXT_PUBLIC_SITE_URL ??
+  process.env.SITE_URL ||
+  process.env.NEXT_PUBLIC_SITE_URL ||
   (process.env.VERCEL_PROJECT_PRODUCTION_URL
     ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
     : "http://localhost:3000")

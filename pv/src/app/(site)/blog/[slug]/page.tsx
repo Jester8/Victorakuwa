@@ -89,7 +89,7 @@ export default async function BlogPost({ params }: Props) {
 
       {post.coverUrl && (
         <div className="container-px mt-10 sm:mt-14">
-          <div className="relative mx-auto aspect-[16/9] max-w-5xl overflow-hidden rounded-2xl bg-line">
+          <div className="relative mx-auto skeleton aspect-[16/9] max-w-5xl overflow-hidden rounded-2xl">
             <Image
               src={post.coverUrl}
               alt=""

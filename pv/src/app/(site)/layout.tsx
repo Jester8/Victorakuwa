@@ -5,7 +5,7 @@ import SmoothScroll from "@/components/SmoothScroll";
 import NewBooksPopup from "@/components/NewBooksPopup";
 import PageViewTracker from "@/components/PageViewTracker";
 import WebVitalsReporter from "@/components/WebVitalsReporter";
-import ThemePreviewBar from "@/components/ThemePreviewBar";
+import SiteSettings from "@/components/SiteSettings";
 import { getActiveTheme } from "@/lib/theme";
 import { themeCss } from "@/lib/theme-shared";
 
@@ -16,7 +16,7 @@ export default async function SiteLayout({
 }>) {
   const theme = await getActiveTheme();
   return (
-    <>
+    <SiteSettings initial={theme}>
       {/* The admin-chosen theme. Only the public site gets it, so the admin always stays readable. */}
       <style id="site-theme" dangerouslySetInnerHTML={{ __html: themeCss(theme) }} />
       <SmoothScroll />
@@ -27,7 +27,6 @@ export default async function SiteLayout({
       <NewBooksPopup />
       <PageViewTracker />
       <WebVitalsReporter />
-      <ThemePreviewBar />
-    </>
+    </SiteSettings>
   );
 }

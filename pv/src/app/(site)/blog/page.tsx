@@ -27,7 +27,7 @@ function PostMeta({ date, content }: { date: Date | null; content: string }) {
 function CoverArt({ src, title, featured = false }: { src: string | null; title: string; featured?: boolean }) {
   if (src) {
     return (
-      <div className={`relative overflow-hidden bg-line ${featured ? "aspect-[16/10] rounded-2xl sm:rounded-[1.75rem]" : "aspect-[5/3] rounded-xl"}`}>
+      <div className={`skeleton relative overflow-hidden ${featured ? "aspect-[16/10] rounded-2xl sm:rounded-[1.75rem]" : "aspect-[5/3] rounded-xl"}`}>
         <Image src={src} alt={title} fill sizes={featured ? "(min-width: 768px) 55vw, 100vw" : "(min-width: 1024px) 30vw, (min-width: 640px) 50vw, 100vw"} className="object-cover transition-transform duration-700 group-hover:scale-[1.04]" priority={featured} />
       </div>
     );

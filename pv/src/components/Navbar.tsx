@@ -5,7 +5,6 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 
 const links = [
   { href: "/", label: "Home" },
@@ -18,8 +17,8 @@ const links = [
 
 export default function Navbar() {
   const pathname = usePathname();
-  const prefersReducedMotion = useReducedMotion();
   const [open, setOpen] = useState(false);
+  const [menuPath, setMenuPath] = useState(pathname);
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -29,7 +28,11 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  useEffect(() => setOpen(false), [pathname]);
+  // Close the mobile menu after navigating.
+  if (menuPath !== pathname) {
+    setMenuPath(pathname);
+    setOpen(false);
+  }
 
   return (
     <header
@@ -94,45 +97,40 @@ export default function Navbar() {
         </button>
       </nav>
 
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{
-              duration: prefersReducedMotion ? 0 : 0.3,
-              ease: [0.22, 1, 0.36, 1],
-            }}
-            className="overflow-hidden border-t border-line bg-background md:hidden"
-          >
-            <ul className="container-px flex flex-col gap-1 py-4">
-              {links.map((link) => {
-                const active =
-                  link.href === "/"
-                    ? pathname === "/"
-                    : pathname.startsWith(link.href);
-                return (
-                  <li key={link.href}>
-                    <Link
-                      href={link.href}
-                      onClick={() => setOpen(false)}
-                      aria-current={active ? "page" : undefined}
-                      className={`block rounded-md px-3 py-3 text-base font-medium transition-colors ${
-                        active
-                          ? "bg-foreground text-background"
-                          : "text-foreground hover:bg-foreground/5"
-                      }`}
-                    >
-                      {link.label}
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Grid rows animate from 0 to the content's height without measuring it. */}
+      <div
+        inert={!open}
+        className={`grid transition-[grid-template-rows,opacity] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none md:hidden ${
+          open ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+        }`}
+      >
+        <div className={`overflow-hidden bg-background ${open ? "border-t border-line" : ""}`}>
+          <ul className="container-px flex flex-col gap-1 py-4">
+            {links.map((link) => {
+              const active =
+                link.href === "/"
+                  ? pathname === "/"
+                  : pathname.startsWith(link.href);
+              return (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    onClick={() => setOpen(false)}
+                    aria-current={active ? "page" : undefined}
+                    className={`block rounded-md px-3 py-3 text-base font-medium transition-colors ${
+                      active
+                        ? "bg-foreground text-background"
+                        : "text-foreground hover:bg-foreground/5"
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      </div>
     </header>
   );
 }

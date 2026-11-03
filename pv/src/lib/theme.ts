@@ -5,21 +5,27 @@ import { DEFAULT_THEME, parseTheme, type Theme } from "@/lib/theme-shared";
 
 export const THEME_TAG = "site-theme";
 
-/** The live theme: the newest saved version, or the original look if none (or the database is down). */
-export const getActiveTheme = unstable_cache(
-  async (): Promise<Theme> => {
-    if (!isDatabaseConfigured()) return DEFAULT_THEME;
+// Caches the raw saved value. It's checked on every read (below), so a value cached before a
+// setting existed still gets that setting's default.
+const loadSavedTheme = unstable_cache(
+  async (): Promise<unknown> => {
+    if (!isDatabaseConfigured()) return null;
     try {
       const sql = await db();
       const [row] = await sql<{ theme: unknown }[]>`select theme from theme_versions order by id desc limit 1`;
-      return (row && parseTheme(row.theme)) || DEFAULT_THEME;
+      return row?.theme ?? null;
     } catch {
-      return DEFAULT_THEME;
+      return null;
     }
   },
-  ["site-theme"],
+  ["site-theme-raw"],
   { tags: [THEME_TAG] }
 );
+
+/** The live theme: the newest saved version, or the original look if none (or the database is down). */
+export async function getActiveTheme(): Promise<Theme> {
+  return parseTheme(await loadSavedTheme()) ?? DEFAULT_THEME;
+}
 
 export type ThemeVersion = { id: number; theme: Theme; label: string; createdAt: Date };
 

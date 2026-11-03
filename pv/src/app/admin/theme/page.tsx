@@ -30,10 +30,10 @@ export default async function AdminTheme() {
   const isOriginal = sameTheme(active, DEFAULT_THEME);
 
   return (
-    <div className="mx-auto max-w-6xl">
+    <div className="mx-auto max-w-[96rem]">
       <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">Theme</h1>
       <p className="mt-1 text-sm text-muted sm:text-base">
-        Change the website&apos;s colours, fonts and corners. Only you can change this, and every published
+        Change the website&apos;s colours, fonts, animations and features. Only you can change this, and every published
         version is kept so you can go back.
       </p>
 

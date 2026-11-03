@@ -1,8 +1,9 @@
 "use client";
 
-import { motion, useReducedMotion, type Variants } from "framer-motion";
-import type { ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useSiteSettings } from "@/components/SiteSettings";
 
+/** Fades content up as it scrolls into view. Pure CSS, driven by the admin's animation setting. */
 export default function Reveal({
   children,
   delay = 0,
@@ -12,26 +13,34 @@ export default function Reveal({
   delay?: number;
   className?: string;
 }) {
-  const prefersReducedMotion = useReducedMotion();
-  const variants: Variants = {
-    hidden: { opacity: 0, y: prefersReducedMotion ? 0 : 24 },
-    visible: { opacity: 1, y: 0 },
-  };
+  const { motion } = useSiteSettings();
+  const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
 
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || motion === "off") return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "0px 0px -10% 0px" }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [motion]);
+
+  if (motion === "off") return <div className={className}>{children}</div>;
   return (
-    <motion.div
-      variants={variants}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, margin: "-10% 0px" }}
-      transition={{
-        duration: prefersReducedMotion ? 0.2 : 0.7,
-        ease: [0.22, 1, 0.36, 1],
-        delay: prefersReducedMotion ? 0 : delay,
-      }}
-      className={className}
+    <div
+      ref={ref}
+      className={`reveal ${visible ? "is-visible" : ""} ${className ?? ""}`}
+      style={delay ? ({ "--reveal-delay": `${delay}s` } as React.CSSProperties) : undefined}
     >
       {children}
-    </motion.div>
+    </div>
   );
 }

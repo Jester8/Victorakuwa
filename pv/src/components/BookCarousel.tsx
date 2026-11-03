@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
-import { useReducedMotion } from "framer-motion";
+import { usePrefersReducedMotion, useSiteSettings } from "@/components/SiteSettings";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { books, type BookRelease } from "@/data/books";
 
@@ -50,7 +50,8 @@ export default function BookCarousel({
   const interactingRef = useRef(false);
   const pauseUntilRef = useRef(0);
   const [activeIndex, setActiveIndex] = useState(0);
-  const prefersReducedMotion = useReducedMotion();
+  const prefersReducedMotion = usePrefersReducedMotion();
+  const { bookAutoScroll } = useSiteSettings();
 
   useEffect(() => {
     const viewport = viewportRef.current;
@@ -76,7 +77,7 @@ export default function BookCarousel({
 
       const { step, loopWidth } = metricsRef.current;
       if (step > 0 && loopWidth > 0) {
-        if (!interactingRef.current && time >= pauseUntilRef.current) {
+        if (bookAutoScroll && !interactingRef.current && time >= pauseUntilRef.current) {
           const currentPosition =
             ((viewport.scrollLeft % loopWidth) + loopWidth) % loopWidth;
           const speed = prefersReducedMotion ? 18 : 44;
@@ -100,12 +101,21 @@ export default function BookCarousel({
       frame = window.requestAnimationFrame(animate);
     };
 
-    frame = window.requestAnimationFrame(animate);
+    // Only run the animation loop while the carousel is on screen.
+    const visibility = new IntersectionObserver(([entry]) => {
+      window.cancelAnimationFrame(frame);
+      if (entry.isIntersecting) {
+        previousTime = performance.now();
+        frame = window.requestAnimationFrame(animate);
+      }
+    });
+    visibility.observe(viewport);
     return () => {
       window.cancelAnimationFrame(frame);
       resizeObserver.disconnect();
+      visibility.disconnect();
     };
-  }, [items.length, prefersReducedMotion, variant]);
+  }, [items.length, prefersReducedMotion, variant, bookAutoScroll]);
 
   const move = useCallback(
     (direction: -1 | 1) => {

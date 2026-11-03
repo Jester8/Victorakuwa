@@ -1,7 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { useEffect, useState, type ElementType, type ReactNode } from "react";
+import { useSiteSettings } from "@/components/SiteSettings";
 
 export default function TypewriterHeading({
   text,
@@ -18,39 +18,40 @@ export default function TypewriterHeading({
   className?: string;
   children?: ReactNode;
 }) {
+  const { typewriter } = useSiteSettings();
   const [count, setCount] = useState(0);
-  const done = count >= text.length;
+  const shown = typewriter ? count : text.length;
+  const done = shown >= text.length;
 
   useEffect(() => {
-    const start = setTimeout(() => {
-      const id = setInterval(() => {
+    if (!typewriter) return;
+    let id = 0;
+    const start = window.setTimeout(() => {
+      id = window.setInterval(() => {
         setCount((c) => {
           const next = c + 1;
           if (next >= text.length) {
-            clearInterval(id);
+            window.clearInterval(id);
             return text.length;
           }
           return next;
         });
       }, speed);
     }, startDelay);
-    return () => clearTimeout(start);
-  }, [text, speed, startDelay]);
+    return () => {
+      window.clearTimeout(start);
+      window.clearInterval(id);
+    };
+  }, [text, speed, startDelay, typewriter]);
 
   return (
     <>
       <Tag aria-label={text} className={className}>
-        <span aria-hidden="true">{text.slice(0, count)}</span>
-        <span aria-hidden="true" className="typewriter-cursor" />
+        <span aria-hidden="true">{text.slice(0, shown)}</span>
+        {typewriter && <span aria-hidden="true" className="typewriter-cursor" />}
       </Tag>
       {children ? (
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={done ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-        >
-          {children}
-        </motion.div>
+        <div className={typewriter ? (done ? "fade-up" : "opacity-0") : undefined}>{children}</div>
       ) : null}
     </>
   );

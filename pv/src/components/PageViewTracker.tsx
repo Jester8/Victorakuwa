@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
+import { isAdminPreviewFrame } from "@/components/SiteSettings";
 
 /** Records one page view per route change for the admin dashboard. */
 export default function PageViewTracker() {
@@ -9,6 +10,8 @@ export default function PageViewTracker() {
   const firstView = useRef(true);
 
   useEffect(() => {
+    // The admin's theme preview isn't a real visit.
+    if (isAdminPreviewFrame()) return;
     let referrer: string | null = null;
     if (firstView.current) {
       firstView.current = false;

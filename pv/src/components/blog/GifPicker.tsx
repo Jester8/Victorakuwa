@@ -51,7 +51,11 @@ export default function GifPicker({ onPick }: { onPick: (gif: Gif) => void }) {
         {status === "error" ? (
           <p className="p-4 text-center text-sm text-muted">{error || "Couldn't load GIFs."}</p>
         ) : status === "loading" && gifs.length === 0 ? (
-          <p className="p-4 text-center text-sm text-muted">Loading…</p>
+          <div className="columns-2 gap-2" aria-label="Loading GIFs" aria-busy="true">
+            {[96, 132, 110, 84, 124, 100].map((h, i) => (
+              <div key={i} className="skeleton mb-2 rounded-lg" style={{ height: h }} />
+            ))}
+          </div>
         ) : gifs.length === 0 ? (
           <p className="p-4 text-center text-sm text-muted">No GIFs found.</p>
         ) : (
@@ -61,7 +65,7 @@ export default function GifPicker({ onPick }: { onPick: (gif: Gif) => void }) {
                 key={gif.id}
                 type="button"
                 onClick={() => onPick(gif)}
-                className="mb-2 block w-full overflow-hidden rounded-lg bg-line focus-visible:outline-2 focus-visible:outline-foreground"
+                className="skeleton mb-2 block w-full overflow-hidden rounded-lg focus-visible:outline-2 focus-visible:outline-foreground"
                 aria-label={gif.title || "GIF"}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}

@@ -2,6 +2,8 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
+    // AVIF is typically 20-30% smaller than WebP; browsers without it get WebP.
+    formats: ["image/avif", "image/webp"],
     remotePatterns: [
       // Blog images uploaded through the admin (Vercel Blob).
       { protocol: "https", hostname: "*.public.blob.vercel-storage.com" },
