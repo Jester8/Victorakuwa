@@ -46,9 +46,10 @@ export const metadata: Metadata = {
     follow: true,
     googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1 },
   },
-  verification: process.env.GOOGLE_SITE_VERIFICATION
-    ? { google: process.env.GOOGLE_SITE_VERIFICATION }
-    : undefined,
+  // Google Search Console ownership check. Public by design: Google reads it from the page.
+  verification: {
+    google: process.env.GOOGLE_SITE_VERIFICATION || "XyTE7zck_jqdN41q45oyspM60WhJXO6CZEOhujXAuNE",
+  },
   appleWebApp: {
     capable: true,
     title: "PV",
