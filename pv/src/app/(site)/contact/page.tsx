@@ -3,11 +3,14 @@ import { ArrowUpRight } from "lucide-react";
 import Reveal from "@/components/Reveal";
 import TypewriterHeading from "@/components/TypewriterHeading";
 import { InstagramIcon } from "@/components/SocialIcons";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata = {
-  title: "Contact | Pastor Victor Akuwa",
-  description: "Connect with Pastor Victor Akuwa.",
-};
+export const metadata = pageMetadata({
+  title: "Contact",
+  description:
+    "Get in touch with Pastor Victor Akuwa for ministry invitations, mentorship, book enquiries, and connecting with The Prevailing House.",
+  path: "/contact",
+});
 
 const officialLinksUrl = "https://linktr.ee/vakuwa";
 const instagramUrl = "https://www.instagram.com/akuwavictor";

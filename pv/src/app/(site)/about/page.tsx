@@ -3,16 +3,30 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import Reveal from "@/components/Reveal";
 import TypewriterHeading from "@/components/TypewriterHeading";
+import JsonLd from "@/components/JsonLd";
+import { PV_IMAGE, SITE_URL, pageMetadata, personJsonLd } from "@/lib/seo";
 
-export const metadata = {
-  title: "About | Pastor Victor Akuwa",
+export const metadata = pageMetadata({
+  title: "About Pastor Victor Akuwa",
   description:
-    "Teacher, author, mentor, husband, father, and disciple committed to making disciples.",
-};
+    "Meet Pastor Victor Akuwa (PV): teacher, author, mentor, husband and father, Lead Pastor of The Prevailing House and Resident Pastor at Davidic Generation Church, Ibadan.",
+  path: "/about",
+  image: PV_IMAGE,
+  type: "profile",
+});
 
 export default function About() {
   return (
     <>
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "ProfilePage",
+          url: `${SITE_URL}/about`,
+          name: "About Pastor Victor Akuwa",
+          mainEntity: personJsonLd,
+        }}
+      />
       {/* Hero */}
       <section className="relative flex h-[88svh] min-h-[520px] max-h-[820px] w-full items-end overflow-hidden">
         <Image

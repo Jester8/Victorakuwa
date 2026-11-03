@@ -3,14 +3,16 @@ import { ArrowUpRight, Music2 } from "lucide-react";
 import Reveal from "@/components/Reveal";
 import TeachingsVideoGrid from "@/components/TeachingsVideoGrid";
 import { audioReleases, audioTeachings } from "@/data/teachings";
+import { pageMetadata } from "@/lib/seo";
 
 const dgcWebsiteUrl = "https://www.davidicgenerationchurch.com/";
 
-export const metadata = {
-  title: "Teachings | Pastor Victor Akuwa",
+export const metadata = pageMetadata({
+  title: "Teachings",
   description:
     "Watch selected messages from Pastor Victor Akuwa’s teaching ministry at Davidic Generation Church Ibadan, and explore his audio releases.",
-};
+  path: "/teachings",
+});
 
 export default function Teachings() {
   return (

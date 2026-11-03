@@ -2,12 +2,14 @@ import Image from "next/image";
 import { BookOpen } from "lucide-react";
 import Reveal from "@/components/Reveal";
 import BookCarousel from "@/components/BookCarousel";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata = {
-  title: "Books | Pastor Victor Akuwa",
+export const metadata = pageMetadata({
+  title: "Books",
   description:
-    "Explore books by Pastor Victor Akuwa and learn more about each title.",
-};
+    "Books by Pastor Victor Akuwa, including Dear Àṣàkẹ́, Dear Ọba and Wisdom Through Faith: practical, Scripture-rooted reading on faith, identity and purpose.",
+  path: "/books",
+});
 
 export default function Books() {
   return (

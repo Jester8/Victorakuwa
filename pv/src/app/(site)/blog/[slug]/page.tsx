@@ -11,24 +11,26 @@ import { formatDate } from "@/lib/format";
 import { plainText } from "@/lib/sanitize";
 import { readingMinutes } from "@/lib/slug";
 import { getVisitorId } from "@/lib/visitor";
+import JsonLd from "@/components/JsonLd";
+import { SITE_IMAGE, SITE_NAME, SITE_URL, absoluteUrl, pageMetadata, shareImage } from "@/lib/seo";
 
 type Props = { params: Promise<{ slug: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const post = await getPublishedPost((await params).slug);
-  if (!post) return { title: "Post not found | Pastor Victor Akuwa" };
-  return {
-    title: `${post.title} | Pastor Victor Akuwa`,
+  if (!post) return { title: "Post not found", robots: { index: false } };
+  return pageMetadata({
+    title: post.title,
     description: post.excerpt || plainText(post.contentHtml).slice(0, 160),
-    openGraph: {
-      title: post.title,
-      description: post.excerpt || undefined,
-      type: "article",
+    path: `/blog/${post.slug}`,
+    image: post.coverUrl ? shareImage(post.coverUrl, post.title) : SITE_IMAGE,
+    type: "article",
+    extra: {
       publishedTime: post.publishedAt?.toISOString(),
-      images: post.coverUrl ? [post.coverUrl] : undefined,
+      modifiedTime: post.updatedAt.toISOString(),
+      authors: [SITE_NAME],
     },
-    twitter: { card: post.coverUrl ? "summary_large_image" : "summary" },
-  };
+  });
 }
 
 export default async function BlogPost({ params }: Props) {
@@ -44,6 +46,21 @@ export default async function BlogPost({ params }: Props) {
 
   return (
     <article className="pb-24 sm:pb-32">
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "BlogPosting",
+          headline: post.title,
+          description: post.excerpt || plainText(post.contentHtml).slice(0, 160),
+          image: absoluteUrl(post.coverUrl ?? SITE_IMAGE.url),
+          datePublished: post.publishedAt?.toISOString(),
+          dateModified: post.updatedAt.toISOString(),
+          mainEntityOfPage: `${SITE_URL}/blog/${post.slug}`,
+          author: { "@type": "Person", "@id": `${SITE_URL}/#person`, name: "Victor Akuwa", url: `${SITE_URL}/about` },
+          publisher: { "@type": "Person", "@id": `${SITE_URL}/#person`, name: SITE_NAME },
+          wordCount: plainText(post.contentHtml).split(/\s+/).filter(Boolean).length,
+        }}
+      />
       <header className="container-px pt-12 sm:pt-20">
         <div className="mx-auto max-w-[44rem]">
           <Link

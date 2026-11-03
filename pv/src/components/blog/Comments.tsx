@@ -187,7 +187,18 @@ export default function Comments({ slug, initial }: { slug: string; initial: Pub
         Comments{comments.length > 0 && <span className="text-muted"> ({comments.length})</span>}
       </h2>
 
-      <form onSubmit={submit} className="mt-6 rounded-2xl border border-line p-4 sm:p-5">
+      {comments.length === 0 ? (
+        <p className="mt-4 text-muted">No comments yet. Be the first to share a thought.</p>
+      ) : (
+        <ul className="mt-4 divide-y divide-line">
+          {comments.map((comment) => (
+            <CommentItem key={comment.id} comment={comment} onReact={(emoji) => react(comment.id, emoji)} />
+          ))}
+        </ul>
+      )}
+
+      <h3 className="mt-10 text-base font-semibold">Add a comment</h3>
+      <form onSubmit={submit} className="mt-3 rounded-2xl border border-line p-4 sm:p-5">
         <label className="block">
           <span className="sr-only">Your name</span>
           <input
@@ -280,16 +291,6 @@ export default function Comments({ slug, initial }: { slug: string; initial: Pub
           </p>
         )}
       </form>
-
-      {comments.length === 0 ? (
-        <p className="mt-8 text-muted">No comments yet. Be the first to share a thought.</p>
-      ) : (
-        <ul className="mt-4 divide-y divide-line">
-          {comments.map((comment) => (
-            <CommentItem key={comment.id} comment={comment} onReact={(emoji) => react(comment.id, emoji)} />
-          ))}
-        </ul>
-      )}
     </section>
   );
 }

@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Manrope } from "next/font/google";
 import "./globals.css";
 import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
+import { KEYWORDS, SITE_DESCRIPTION, SITE_IMAGE, SITE_NAME, SITE_URL } from "@/lib/seo";
 
 const manrope = Manrope({
   variable: "--font-manrope",
@@ -9,10 +10,40 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
-  title: "Pastor Victor Akuwa | Teacher, Author, Mentor",
-  description:
-    "Pastor Victor Akuwa is a teacher, author, mentor, husband, father, and disciple committed to raising people who know God deeply, live by His Word, and carry His influence into every sphere of society.",
-  applicationName: "Pastor Victor Akuwa",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: "Pastor Victor Akuwa | Teacher, Author, Mentor",
+    template: `%s | ${SITE_NAME}`,
+  },
+  description: SITE_DESCRIPTION,
+  applicationName: SITE_NAME,
+  keywords: KEYWORDS,
+  authors: [{ name: SITE_NAME, url: SITE_URL }],
+  creator: SITE_NAME,
+  publisher: SITE_NAME,
+  category: "religion",
+  openGraph: {
+    type: "website",
+    siteName: SITE_NAME,
+    locale: "en_NG",
+    title: "Pastor Victor Akuwa | Teacher, Author, Mentor",
+    description: SITE_DESCRIPTION,
+    images: [SITE_IMAGE],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Pastor Victor Akuwa | Teacher, Author, Mentor",
+    description: SITE_DESCRIPTION,
+    images: [SITE_IMAGE.url],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1 },
+  },
+  verification: process.env.GOOGLE_SITE_VERIFICATION
+    ? { google: process.env.GOOGLE_SITE_VERIFICATION }
+    : undefined,
   appleWebApp: {
     capable: true,
     title: "PV",

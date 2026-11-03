@@ -6,11 +6,14 @@ import { listPublishedPosts } from "@/lib/blog";
 import { formatDate } from "@/lib/format";
 import { plainText } from "@/lib/sanitize";
 import { readingMinutes } from "@/lib/slug";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata = {
-  title: "Blog | Pastor Victor Akuwa",
-  description: "Reflections, teachings, and notes from Pastor Victor Akuwa on faith, the Word, and everyday discipleship.",
-};
+export const metadata = pageMetadata({
+  title: "Blog",
+  description:
+    "Reflections, teachings, and notes from Pastor Victor Akuwa on faith, the Word, and everyday discipleship.",
+  path: "/blog",
+});
 
 function PostMeta({ date, content }: { date: Date | null; content: string }) {
   return (

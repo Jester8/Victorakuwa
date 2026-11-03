@@ -6,6 +6,15 @@ import TypewriterHeading from "@/components/TypewriterHeading";
 import HeroCarousel from "@/components/HeroCarousel";
 import BookCarousel from "@/components/BookCarousel";
 import { books, latestBooks } from "@/data/books";
+import JsonLd from "@/components/JsonLd";
+import { SITE_DESCRIPTION, SITE_NAME, SITE_URL, pageMetadata, personJsonLd } from "@/lib/seo";
+
+export const metadata = pageMetadata({
+  title: "Pastor Victor Akuwa | Teacher, Author, Mentor",
+  absoluteTitle: true,
+  description: SITE_DESCRIPTION,
+  path: "/",
+});
 
 const roles = [
   {
@@ -33,6 +42,23 @@ const roles = [
 export default function Home() {
   return (
     <>
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "WebSite",
+              "@id": `${SITE_URL}/#website`,
+              url: SITE_URL,
+              name: SITE_NAME,
+              description: SITE_DESCRIPTION,
+              inLanguage: "en",
+              publisher: { "@id": `${SITE_URL}/#person` },
+            },
+            personJsonLd,
+          ],
+        }}
+      />
       {/* Hero */}
       <HeroCarousel>
         <Reveal>

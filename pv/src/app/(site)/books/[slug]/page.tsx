@@ -4,6 +4,8 @@ import Link from "next/link";
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { notFound } from "next/navigation";
 import { books } from "@/data/books";
+import JsonLd from "@/components/JsonLd";
+import { SITE_URL, absoluteUrl, pageMetadata, shareImage } from "@/lib/seo";
 
 type BookPageProps = {
   params: Promise<{ slug: string }>;
@@ -19,12 +21,15 @@ export async function generateMetadata({
   const { slug } = await params;
   const book = books.find((item) => item.slug === slug);
 
-  if (!book) return { title: "Book not found | Pastor Victor Akuwa" };
+  if (!book) return { title: "Book not found", robots: { index: false } };
 
-  return {
-    title: `${book.title} | Pastor Victor Akuwa`,
+  return pageMetadata({
+    title: `${book.title} by Pastor Victor Akuwa`,
     description: book.description,
-  };
+    path: `/books/${book.slug}`,
+    image: shareImage(book.cover, `Cover of ${book.title} by Pastor Victor Akuwa`),
+    type: "book",
+  });
 }
 
 export default async function BookDetailPage({ params }: BookPageProps) {
@@ -35,6 +40,19 @@ export default async function BookDetailPage({ params }: BookPageProps) {
 
   return (
     <section className="container-px py-10 sm:py-14 lg:py-20">
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "Book",
+          name: book.title,
+          description: book.description,
+          image: absoluteUrl(book.cover),
+          url: `${SITE_URL}/books/${book.slug}`,
+          inLanguage: "en",
+          author: { "@id": `${SITE_URL}/#person`, "@type": "Person", name: "Victor Akuwa" },
+          offers: { "@type": "Offer", url: book.href, availability: "https://schema.org/InStock" },
+        }}
+      />
       <Link
         href="/books#titles"
         className="inline-flex min-h-10 items-center gap-2 text-sm font-semibold text-muted transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-foreground"
