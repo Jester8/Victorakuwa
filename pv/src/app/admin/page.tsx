@@ -1,6 +1,19 @@
 import Link from "next/link";
+import { AlertTriangle, CheckCircle2, Lightbulb } from "lucide-react";
 import { requireAdmin } from "@/lib/auth";
 import { getDashboardStats, listAllPosts } from "@/lib/blog";
+import {
+  buildSuggestions,
+  getAudience,
+  getPerformance,
+  getPeriodComparison,
+  VITALS,
+  type Rating,
+  type Suggestion,
+  type VitalName,
+} from "@/lib/analytics";
+import DonutChart from "@/app/admin/DonutChart";
+import LiveRefresh from "@/app/admin/LiveRefresh";
 
 const RANGES = [7, 30, 90] as const;
 
@@ -76,6 +89,34 @@ function TrafficChart({ daily }: { daily: { day: string; views: number; visitors
   );
 }
 
+const RATING_STYLE: Record<Rating, { label: string; dot: string; text: string }> = {
+  good: { label: "Good", dot: "#1a7f37", text: "text-[#1a7f37]" },
+  "needs-improvement": { label: "Needs work", dot: "#b76e00", text: "text-[#9a5c00]" },
+  poor: { label: "Poor", dot: "#c62828", text: "text-[#c62828]" },
+};
+
+function formatVital(metric: VitalName, value: number) {
+  if (metric === "CLS") return value.toFixed(2);
+  if (metric === "INP") return `${Math.round(value)}ms`;
+  return `${(value / 1000).toFixed(1)}s`;
+}
+
+function RatingBadge({ rating }: { rating: Rating }) {
+  const style = RATING_STYLE[rating];
+  return (
+    <span className={`inline-flex items-center gap-1.5 text-xs font-semibold ${style.text}`}>
+      <span aria-hidden="true" className="size-2 rounded-full" style={{ background: style.dot }} />
+      {style.label}
+    </span>
+  );
+}
+
+const SUGGESTION_STYLE: Record<Suggestion["tone"], { icon: typeof Lightbulb; className: string; label: string }> = {
+  warning: { icon: AlertTriangle, className: "text-[#c62828]", label: "Needs attention" },
+  tip: { icon: Lightbulb, className: "text-[#9a5c00]", label: "Suggestion" },
+  good: { icon: CheckCircle2, className: "text-[#1a7f37]", label: "Going well" },
+};
+
 export default async function AdminOverview({
   searchParams,
 }: {
@@ -84,10 +125,17 @@ export default async function AdminOverview({
   await requireAdmin();
   const requested = Number((await searchParams).days);
   const days = (RANGES as readonly number[]).includes(requested) ? requested : 30;
-  const [{ totals, daily, shareNetworks, topPages, referrers }, posts] = await Promise.all([
-    getDashboardStats(days),
-    listAllPosts(),
-  ]);
+  const [{ totals, daily, shareNetworks, topPages, referrers }, posts, audience, performance, comparison] =
+    await Promise.all([
+      getDashboardStats(days),
+      listAllPosts(),
+      getAudience(days),
+      getPerformance(days),
+      getPeriodComparison(days),
+    ]);
+  const suggestions = buildSuggestions({ days, audience, performance, comparison, posts, shares: totals.shares });
+  const viewChange =
+    comparison.prevViews > 0 ? Math.round(((comparison.views - comparison.prevViews) / comparison.prevViews) * 100) : null;
   const topPosts = posts
     .filter((p) => p.status === "published")
     .sort((a, b) => b.views - a.views)
@@ -99,6 +147,9 @@ export default async function AdminOverview({
         <div>
           <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">Overview</h1>
           <p className="mt-1 text-sm text-muted sm:text-base">How the website and blog are doing.</p>
+          <div className="mt-2">
+            <LiveRefresh />
+          </div>
         </div>
         <div className="flex w-full rounded-full border border-line bg-background p-1 text-sm sm:w-auto">
           {RANGES.map((range) => (
@@ -126,12 +177,181 @@ export default async function AdminOverview({
         <Stat label="Published posts" value={totals.posts} />
       </div>
 
+      <div className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
+        <section className="rounded-2xl border border-line bg-background p-4 sm:p-6">
+          <h2 className="font-semibold">On the site right now</h2>
+          <p className="mt-3 text-4xl font-semibold tabular-nums tracking-tight">{audience.live.visitors}</p>
+          <p className="text-sm text-muted">
+            {audience.live.visitors === 1 ? "visitor" : "visitors"} in the last 5 minutes
+          </p>
+          {audience.live.pages.length > 0 && (
+            <ul className="mt-4 space-y-1.5 border-t border-line pt-4 text-sm">
+              {audience.live.pages.map((page) => (
+                <li key={page.path} className="flex items-center justify-between gap-3">
+                  <span className="truncate">{page.path}</span>
+                  <span className="font-semibold tabular-nums">{page.visitors}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+          {viewChange !== null && (
+            <p className="mt-4 border-t border-line pt-4 text-sm text-muted">
+              Page views are{" "}
+              <span className={`font-semibold ${viewChange >= 0 ? "text-[#1a7f37]" : "text-[#c62828]"}`}>
+                {viewChange >= 0 ? "up" : "down"} {Math.abs(viewChange)}%
+              </span>{" "}
+              on the previous {days} days.
+            </p>
+          )}
+        </section>
+
+        <section className="rounded-2xl border border-line bg-background p-4 sm:p-6">
+          <h2 className="font-semibold">How the site is faring</h2>
+          <p className="text-sm text-muted">Suggestions based on the last {days} days</p>
+          {suggestions.length === 0 ? (
+            <p className="mt-4 text-sm text-muted">Nothing needs attention right now.</p>
+          ) : (
+            <ul className="mt-4 divide-y divide-line">
+              {suggestions.map((item) => {
+                const style = SUGGESTION_STYLE[item.tone];
+                const Icon = style.icon;
+                return (
+                  <li key={item.title} className="flex gap-3 py-3 first:pt-0 last:pb-0">
+                    <Icon size={18} className={`mt-0.5 shrink-0 ${style.className}`} aria-label={style.label} />
+                    <div className="min-w-0">
+                      <p className="text-sm font-semibold">{item.title}</p>
+                      <p className="mt-0.5 text-sm leading-relaxed text-muted">{item.detail}</p>
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+        </section>
+      </div>
+
       <section className="mt-6 rounded-2xl border border-line bg-background p-4 sm:p-6">
         <h2 className="font-semibold">Traffic</h2>
         <p className="text-sm text-muted">Page views per day, last {days} days</p>
         <div className="mt-6">
           <TrafficChart daily={daily} />
         </div>
+      </section>
+
+      <div className="mt-6 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+        <DonutChart title="Devices" slices={audience.devices} unit="visitors" empty="No visits recorded yet." />
+        <DonutChart title="Traffic sources" slices={audience.sources} unit="page views" empty="No visits recorded yet." />
+        <DonutChart title="Sections visited" slices={audience.sections} unit="page views" empty="No visits recorded yet." />
+        <DonutChart title="Browsers" slices={audience.browsers} unit="visitors" empty="No visits recorded yet." />
+        <DonutChart
+          title="Countries"
+          slices={audience.countries}
+          unit="visitors"
+          empty="Countries appear once the site is live on Vercel."
+        />
+        <DonutChart title="Reactions" slices={audience.reactions} unit="reactions" empty="No reactions yet." />
+      </div>
+
+      <section className="mt-6 rounded-2xl border border-line bg-background p-4 sm:p-6">
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <h2 className="font-semibold">Performance</h2>
+            <p className="text-sm text-muted">
+              Measured in real visitors&apos; browsers. Three in four visits were at least this fast.
+            </p>
+          </div>
+          {performance.score !== null && (
+            <div className="text-right">
+              <p className="text-3xl font-semibold tabular-nums tracking-tight">
+                {performance.score}
+                <span className="text-base font-normal text-muted">/100</span>
+              </p>
+              <p className="text-xs text-muted">Speed score</p>
+            </div>
+          )}
+        </div>
+
+        {performance.metrics.length === 0 ? (
+          <p className="mt-4 text-sm text-muted">
+            No speed data yet. It is collected automatically as people visit the site.
+          </p>
+        ) : (
+          <>
+            <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+              {(Object.keys(VITALS) as VitalName[]).map((name) => {
+                const m = performance.metrics.find((x) => x.metric === name);
+                return (
+                  <div key={name} className="rounded-xl border border-line p-3.5">
+                    <p className="text-xs text-muted">{VITALS[name].label}</p>
+                    <p className="mt-1.5 text-xl font-semibold tabular-nums">{m ? formatVital(name, m.p75) : "—"}</p>
+                    <div className="mt-1">{m ? <RatingBadge rating={m.rating} /> : <span className="text-xs text-muted">No data</span>}</div>
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className="mt-6 grid gap-6 lg:grid-cols-2">
+              <div>
+                <h3 className="text-sm font-semibold">Page loads by speed</h3>
+                <div className="mt-3 flex h-3 overflow-hidden rounded-full bg-foreground/[0.06]">
+                  {(["good", "needs-improvement", "poor"] as Rating[]).map((rating) =>
+                    performance.loads[rating] ? (
+                      <div
+                        key={rating}
+                        style={{
+                          width: `${(performance.loads[rating] / performance.totalLoads) * 100}%`,
+                          background: RATING_STYLE[rating].dot,
+                        }}
+                        className="border-r-2 border-background last:border-r-0"
+                      />
+                    ) : null
+                  )}
+                </div>
+                <ul className="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-sm">
+                  {(["good", "needs-improvement", "poor"] as Rating[]).map((rating) => (
+                    <li key={rating} className="flex items-center gap-2">
+                      <RatingBadge rating={rating} />
+                      <span className="tabular-nums text-muted">
+                        {Math.round((performance.loads[rating] / Math.max(performance.totalLoads, 1)) * 100)}%
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+                {performance.byDevice.length > 0 && (
+                  <ul className="mt-4 space-y-1.5 border-t border-line pt-4 text-sm">
+                    {performance.byDevice.map((d) => (
+                      <li key={d.device} className="flex items-center justify-between gap-3">
+                        <span>{d.device}</span>
+                        <span className="flex items-center gap-3">
+                          <span className="tabular-nums">{formatVital("LCP", d.p75)}</span>
+                          <RatingBadge rating={d.rating} />
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+              <div>
+                <h3 className="text-sm font-semibold">Slowest pages</h3>
+                {performance.slowPages.length === 0 ? (
+                  <p className="mt-3 text-sm text-muted">Needs a few more visits per page.</p>
+                ) : (
+                  <ul className="mt-3 space-y-1.5 text-sm">
+                    {performance.slowPages.map((page) => (
+                      <li key={page.path} className="flex items-center justify-between gap-3">
+                        <span className="truncate">{page.path}</span>
+                        <span className="flex shrink-0 items-center gap-3">
+                          <span className="tabular-nums">{formatVital("LCP", page.p75)}</span>
+                          <RatingBadge rating={page.rating} />
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            </div>
+          </>
+        )}
       </section>
 
       <div className="mt-6 grid gap-6 lg:grid-cols-2">

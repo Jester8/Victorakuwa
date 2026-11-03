@@ -78,14 +78,14 @@ export default function Home() {
           <div className="mt-9 flex flex-wrap gap-4">
             <Link
               href="/about"
-              className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-sm font-semibold text-foreground transition-transform hover:-translate-y-0.5"
+              className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-sm font-semibold text-neutral-950 transition-transform hover:-translate-y-0.5"
             >
               About PV
               <ArrowRight size={16} />
             </Link>
             <Link
               href="/books"
-              className="inline-flex items-center gap-2 rounded-full border border-white px-7 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-white hover:text-foreground"
+              className="inline-flex items-center gap-2 rounded-full border border-white px-7 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-white hover:text-neutral-950"
             >
               Explore Books
             </Link>

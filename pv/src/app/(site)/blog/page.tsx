@@ -148,7 +148,7 @@ export default async function BlogIndex() {
 
       {!featured && (
         <section className="container-px pb-28 sm:pb-36">
-          <Reveal className="mx-auto max-w-2xl rounded-3xl bg-[#faf9f7] px-6 py-14 text-center sm:px-12 sm:py-20">
+          <Reveal className="mx-auto max-w-2xl rounded-3xl bg-foreground/[0.03] px-6 py-14 text-center sm:px-12 sm:py-20">
             <BookStack />
             <h2 className="mt-8 text-2xl font-semibold tracking-tight sm:text-3xl">A little something is being prepared.</h2>
             <p className="mx-auto mt-3 max-w-md leading-7 text-muted">The first article is on its way. Come back soon for new reflections and teachings.</p>
@@ -169,7 +169,7 @@ export default async function BlogIndex() {
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted">Start here</p>
               <span className="text-xs text-muted">Featured article</span>
             </div>
-            <Link href={`/blog/${featured.slug}`} className="group grid gap-7 rounded-3xl border border-line bg-white p-3 transition-shadow duration-300 hover:shadow-[0_18px_60px_rgba(0,0,0,0.07)] sm:p-5 md:grid-cols-[1.12fr_0.88fr] md:items-center md:gap-10 lg:p-6">
+            <Link href={`/blog/${featured.slug}`} className="group grid gap-7 rounded-3xl border border-line bg-background p-3 transition-shadow duration-300 hover:shadow-[0_18px_60px_rgba(0,0,0,0.07)] sm:p-5 md:grid-cols-[1.12fr_0.88fr] md:items-center md:gap-10 lg:p-6">
               <CoverArt src={featured.coverUrl} title={featured.title} featured />
               <div className="px-3 pb-4 sm:px-4 md:px-2 md:py-6">
                 <PostMeta date={featured.publishedAt} content={featured.contentHtml} />

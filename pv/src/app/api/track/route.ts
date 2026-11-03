@@ -1,4 +1,6 @@
+import { headers } from "next/headers";
 import { recordPageView } from "@/lib/blog";
+import { describeUserAgent, isBot } from "@/lib/ua";
 import { getVisitorId } from "@/lib/visitor";
 
 export async function POST(request: Request) {
@@ -17,6 +19,12 @@ export async function POST(request: Request) {
       ? body.referrer.slice(0, 300)
       : null;
 
-  await recordPageView(path, visitorId, referrer);
+  const h = await headers();
+  const ua = h.get("user-agent") ?? "";
+  if (isBot(ua)) return new Response(null, { status: 204 });
+  // Vercel adds the visitor's country; elsewhere it's simply left blank.
+  const country = h.get("x-vercel-ip-country")?.slice(0, 2).toUpperCase() || null;
+
+  await recordPageView(path, visitorId, referrer, { ...describeUserAgent(ua), country });
   return new Response(null, { status: 204 });
 }

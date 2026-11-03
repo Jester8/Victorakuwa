@@ -7,7 +7,7 @@ import { logoutAction } from "@/app/admin/actions";
 import AdminNav from "@/app/admin/AdminNav";
 
 export const metadata: Metadata = {
-  title: "Admin | Pastor Victor Akuwa",
+  title: { absolute: "Admin | Pastor Victor Akuwa" },
   robots: { index: false, follow: false },
 };
 

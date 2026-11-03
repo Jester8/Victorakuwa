@@ -225,19 +225,24 @@ export async function recordShare(postId: number, visitorId: string, network: st
   `;
 }
 
-export async function recordPageView(path: string, visitorId: string, referrer: string | null) {
+export async function recordPageView(
+  path: string,
+  visitorId: string,
+  referrer: string | null,
+  client: { device: string; browser: string; country: string | null }
+) {
   const sql = await db();
   const slug = path.match(/^\/blog\/([^/?#]+)/)?.[1];
   const postId = slug ? await getPublishedPostId(decodeURIComponent(slug)) : null;
   await sql`
-    insert into page_views (path, post_id, visitor_id, referrer)
-    values (${path}, ${postId}, ${visitorId}, ${referrer})
+    insert into page_views (path, post_id, visitor_id, referrer, device, browser, country)
+    values (${path}, ${postId}, ${visitorId}, ${referrer}, ${client.device}, ${client.browser}, ${client.country})
   `;
 }
 
 // ---------- Admin ----------
 
-const TIME_ZONE = "Africa/Lagos";
+export const TIME_ZONE = "Africa/Lagos";
 
 export type AdminPostRow = Post & {
   views: number;

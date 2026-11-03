@@ -48,7 +48,7 @@ export default function Contact() {
               href={officialLinksUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-9 inline-flex min-h-12 items-center gap-2 rounded-full bg-white px-7 py-3.5 text-sm font-semibold text-foreground transition-transform hover:-translate-y-0.5"
+              className="mt-9 inline-flex min-h-12 items-center gap-2 rounded-full bg-white px-7 py-3.5 text-sm font-semibold text-neutral-950 transition-transform hover:-translate-y-0.5"
             >
               Explore PV&rsquo;s links
               <ArrowUpRight size={16} />

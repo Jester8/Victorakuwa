@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { checkCredentials, endSession, requireAdmin, startSession } from "@/lib/auth";
 import {
@@ -14,6 +14,8 @@ import {
 } from "@/lib/blog";
 import { plainText, sanitizePostHtml } from "@/lib/sanitize";
 import { slugify } from "@/lib/slug";
+import { getActiveTheme, getThemeVersion, saveThemeVersion, THEME_TAG } from "@/lib/theme";
+import { DEFAULT_THEME, parseTheme, sameTheme, type Theme } from "@/lib/theme-shared";
 
 export type ActionState = {
   error?: string;
@@ -117,4 +119,39 @@ export async function deleteCommentAction(formData: FormData) {
   const id = Number(formData.get("id"));
   if (Number.isInteger(id)) await deleteComment(id);
   revalidatePath("/admin/comments");
+}
+
+export type ThemeActionState = { error?: string; savedAt?: number; message?: string };
+
+async function publishTheme(theme: Theme, label: string) {
+  await saveThemeVersion(theme, label);
+  updateTag(THEME_TAG);
+  revalidatePath("/", "layout");
+}
+
+export async function saveThemeAction(_prev: ThemeActionState, formData: FormData): Promise<ThemeActionState> {
+  await requireAdmin();
+  let theme: Theme | null = null;
+  try {
+    theme = parseTheme(JSON.parse(String(formData.get("theme") ?? "")));
+  } catch {}
+  if (!theme) return { error: "Some theme settings were invalid. Reload the page and try again." };
+  if (sameTheme(theme, await getActiveTheme())) return { error: "That's already the live theme." };
+  const label = String(formData.get("label") ?? "").trim() || "Theme update";
+  await publishTheme(theme, label);
+  return { savedAt: Date.now(), message: "Published. The site now uses this theme." };
+}
+
+/** Restoring re-publishes an older version as the newest one, so the restore itself can be undone too. */
+export async function restoreThemeAction(formData: FormData) {
+  await requireAdmin();
+  const id = Number(formData.get("id"));
+  if (formData.get("original") === "true") {
+    await publishTheme(DEFAULT_THEME, "Restored the original look");
+  } else if (Number.isInteger(id)) {
+    const version = await getThemeVersion(id);
+    if (!version?.theme) return;
+    await publishTheme(version.theme, `Restored: ${version.label || `version ${id}`}`);
+  }
+  revalidatePath("/admin/theme");
 }

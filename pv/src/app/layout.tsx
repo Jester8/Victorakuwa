@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Manrope } from "next/font/google";
+import { DM_Sans, Inter, Lora, Manrope, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
 import { KEYWORDS, SITE_DESCRIPTION, SITE_IMAGE, SITE_NAME, SITE_URL } from "@/lib/seo";
@@ -8,6 +8,11 @@ const manrope = Manrope({
   variable: "--font-manrope",
   subsets: ["latin"],
 });
+// Alternative fonts the admin can switch the site to. Not preloaded, so they cost nothing until chosen.
+const inter = Inter({ variable: "--font-inter", subsets: ["latin"], preload: false });
+const dmSans = DM_Sans({ variable: "--font-dmsans", subsets: ["latin"], preload: false });
+const lora = Lora({ variable: "--font-lora", subsets: ["latin"], preload: false });
+const playfair = Playfair_Display({ variable: "--font-playfair", subsets: ["latin"], preload: false });
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -64,7 +69,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${manrope.variable} antialiased`}>
+    <html lang="en" className={`${manrope.variable} ${inter.variable} ${dmSans.variable} ${lora.variable} ${playfair.variable} antialiased`}>
       <body className="flex min-h-screen flex-col bg-background font-sans text-foreground">
         {children}
         <ServiceWorkerRegister />

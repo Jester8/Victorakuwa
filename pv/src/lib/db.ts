@@ -21,6 +21,8 @@ function client(): Sql {
     idle_timeout: 20,
     // Pooled serverless endpoints (Neon, Supabase) don't support prepared statements.
     prepare: false,
+    // "already exists, skipping" notices from the schema setup are expected; keep logs clean.
+    onnotice: () => {},
   });
   return globalForDb.pvSql;
 }
@@ -87,6 +89,27 @@ const schema = `
   );
   create index if not exists page_views_created_idx on page_views (created_at);
   create index if not exists page_views_post_idx on page_views (post_id);
+  alter table page_views add column if not exists device text;
+  alter table page_views add column if not exists browser text;
+  alter table page_views add column if not exists country text;
+
+  create table if not exists web_vitals (
+    id bigserial primary key,
+    path text not null,
+    metric text not null,
+    value double precision not null,
+    device text,
+    created_at timestamptz not null default now()
+  );
+  create index if not exists web_vitals_created_idx on web_vitals (created_at);
+
+  -- Every saved theme is kept, so any earlier look can be restored. The newest row is live.
+  create table if not exists theme_versions (
+    id serial primary key,
+    theme jsonb not null,
+    label text not null default '',
+    created_at timestamptz not null default now()
+  );
 `;
 
 export async function db(): Promise<Sql> {

@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BarChart3, ExternalLink, FileText, MessageSquare } from "lucide-react";
+import { BarChart3, ExternalLink, FileText, MessageSquare, Palette } from "lucide-react";
 
 const nav = [
   { href: "/admin", label: "Overview", icon: BarChart3 },
   { href: "/admin/posts", label: "Posts", icon: FileText },
   { href: "/admin/comments", label: "Comments", icon: MessageSquare },
+  { href: "/admin/theme", label: "Theme", icon: Palette },
 ];
 
 function isActive(pathname: string, href: string) {
@@ -22,7 +23,7 @@ export default function AdminNav({ variant }: { variant: "sidebar" | "tabs" }) {
     return (
       <nav
         aria-label="Admin"
-        className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-4 border-t border-line bg-background/95 pb-[env(safe-area-inset-bottom)] backdrop-blur md:hidden"
+        className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-5 border-t border-line bg-background/95 pb-[env(safe-area-inset-bottom)] backdrop-blur md:hidden"
       >
         {[...nav, { href: "/blog", label: "Blog", icon: ExternalLink }].map(({ href, label, icon: Icon }) => {
           const active = href !== "/blog" && isActive(pathname, href);
