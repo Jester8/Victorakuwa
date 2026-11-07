@@ -2,8 +2,9 @@ import Link from "next/link";
 import { requireAdmin } from "@/lib/auth";
 import { listAllComments } from "@/lib/blog";
 import { formatDate } from "@/lib/format";
-import { deleteCommentAction, setCommentHiddenAction } from "@/app/admin/actions";
+import { deleteCommentAction, saveCommentReplyAction, setCommentHiddenAction } from "@/app/admin/actions";
 import ConfirmButton from "@/app/admin/ConfirmButton";
+import { ADMIN_REPLY_MAX } from "@/lib/reactions";
 
 const FILTERS = [
   { value: "all", label: "All" },
@@ -30,7 +31,7 @@ export default async function AdminComments({
   return (
     <div className="mx-auto max-w-4xl">
       <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">Comments</h1>
-      <p className="mt-1 text-sm text-muted sm:text-base">Hide a comment to remove it from the blog, or delete it for good.</p>
+      <p className="mt-1 text-sm text-muted sm:text-base">Reply to comments here; saved replies appear publicly below the comment on the blog. You can also hide or delete comments.</p>
 
       <nav aria-label="Filter comments" className="mt-6 flex w-full rounded-full border border-line bg-background p-1 text-sm sm:w-auto sm:inline-flex">
         {FILTERS.map(({ value, label }) => (
@@ -90,6 +91,25 @@ export default async function AdminComments({
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={c.gifUrl} alt="GIF" loading="lazy" className="mt-3 max-h-40 rounded-xl" />
               )}
+              <form action={saveCommentReplyAction} className="mt-4 rounded-xl border border-line p-3 sm:p-4">
+                <input type="hidden" name="id" value={c.id} />
+                <label htmlFor={`reply-${c.id}`} className="block text-sm font-semibold">Admin reply</label>
+                <textarea
+                  id={`reply-${c.id}`}
+                  name="reply"
+                  defaultValue={c.adminReply ?? ""}
+                  maxLength={ADMIN_REPLY_MAX}
+                  rows={3}
+                  placeholder="Write a reply…"
+                  className="mt-2 w-full resize-y rounded-lg border border-line bg-background px-3 py-2 text-sm outline-none focus:border-foreground"
+                />
+                <div className="mt-2 flex flex-col gap-2 text-xs text-muted sm:flex-row sm:items-center sm:justify-between">
+                  <span>Leave blank and save to remove the public reply.</span>
+                  <button type="submit" className="h-9 self-start rounded-full bg-foreground px-4 text-sm font-medium text-background transition-opacity hover:opacity-80 sm:self-auto">
+                    {c.adminReply ? "Update reply" : "Save reply"}
+                  </button>
+                </div>
+              </form>
             </li>
           ))}
         </ul>

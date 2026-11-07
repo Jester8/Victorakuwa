@@ -53,6 +53,8 @@ const schema = `
     created_at timestamptz not null default now()
   );
   create index if not exists comments_post_idx on comments (post_id, created_at);
+  alter table comments add column if not exists admin_reply text;
+  alter table comments add column if not exists admin_replied_at timestamptz;
 
   create table if not exists post_reactions (
     post_id integer not null references posts(id) on delete cascade,

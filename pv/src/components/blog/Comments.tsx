@@ -60,6 +60,17 @@ function CommentItem({ comment, onReact }: { comment: PublicComment; onReact: (e
             className="mt-3 max-h-60 w-auto max-w-full rounded-xl"
           />
         )}
+        {comment.adminReply && (
+          <div className="mt-4 border-l-2 border-foreground/30 bg-foreground/[0.035] px-4 py-3">
+            <p className="text-xs font-semibold uppercase tracking-wider">Administrator reply</p>
+            {comment.adminRepliedAt && (
+              <time className="mt-1 block text-xs text-muted" dateTime={comment.adminRepliedAt} suppressHydrationWarning>
+                {timeAgo(comment.adminRepliedAt)}
+              </time>
+            )}
+            <p className="mt-2 whitespace-pre-wrap break-words text-sm leading-relaxed">{comment.adminReply}</p>
+          </div>
+        )}
         <div className="mt-3 flex flex-wrap gap-1.5" role="group" aria-label="React to this comment">
           {COMMENT_REACTIONS.map((emoji) => {
             const active = comment.reactions.mine.includes(emoji);

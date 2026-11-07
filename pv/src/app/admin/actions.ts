@@ -7,11 +7,13 @@ import {
   deleteComment,
   deletePost,
   getPostById,
+  saveCommentReply,
   savePost,
   setCommentHidden,
   setPostStatus,
   slugExists,
 } from "@/lib/blog";
+import { ADMIN_REPLY_MAX } from "@/lib/reactions";
 import { plainText, sanitizePostHtml } from "@/lib/sanitize";
 import { slugify } from "@/lib/slug";
 import { getActiveTheme, getThemeVersion, saveThemeVersion, THEME_TAG } from "@/lib/theme";
@@ -112,6 +114,18 @@ export async function setCommentHiddenAction(formData: FormData) {
   const hidden = formData.get("hidden") === "true";
   if (Number.isInteger(id)) await setCommentHidden(id, hidden);
   revalidatePath("/admin/comments");
+}
+
+export async function saveCommentReplyAction(formData: FormData) {
+  await requireAdmin();
+  const id = Number(formData.get("id"));
+  const reply = String(formData.get("reply") ?? "").trim();
+  if (!Number.isInteger(id) || id <= 0 || reply.length > ADMIN_REPLY_MAX) return;
+
+  const slug = await saveCommentReply(id, reply);
+  if (!slug) return;
+  revalidatePath("/admin/comments");
+  revalidatePath(`/blog/${slug}`);
 }
 
 export async function deleteCommentAction(formData: FormData) {

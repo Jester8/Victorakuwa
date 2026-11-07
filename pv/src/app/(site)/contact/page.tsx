@@ -2,6 +2,7 @@ import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 import Reveal from "@/components/Reveal";
 import TypewriterHeading from "@/components/TypewriterHeading";
+import ContactForm from "@/components/ContactForm";
 import { InstagramIcon } from "@/components/SocialIcons";
 import { pageMetadata } from "@/lib/seo";
 
@@ -14,7 +15,6 @@ export const metadata = pageMetadata({
 
 const officialLinksUrl = "https://linktr.ee/vakuwa";
 const instagramUrl = "https://www.instagram.com/akuwavictor";
-const contactEmail = process.env.NEXT_PUBLIC_CONTACT_EMAIL?.trim();
 
 export default function Contact() {
   return (
@@ -98,75 +98,7 @@ export default function Contact() {
         </Reveal>
 
         <Reveal delay={0.08}>
-          <form
-            action={
-              contactEmail
-                ? `mailto:${contactEmail}?subject=Website%20contact%20message`
-                : undefined
-            }
-            method="post"
-            encType="text/plain"
-            className="space-y-5 border border-line bg-background p-6 sm:p-8"
-          >
-            <fieldset disabled={!contactEmail} className="space-y-5">
-              <div className="grid gap-5 sm:grid-cols-2">
-                <label className="block text-sm font-semibold">
-                  Name
-                  <input
-                    name="Name"
-                    type="text"
-                    autoComplete="name"
-                    required
-                    className="mt-2 min-h-12 w-full border border-line bg-background px-4 font-normal outline-none transition-colors placeholder:text-muted focus:border-foreground"
-                    placeholder="Your name"
-                  />
-                </label>
-                <label className="block text-sm font-semibold">
-                  Email
-                  <input
-                    name="Email"
-                    type="email"
-                    autoComplete="email"
-                    required
-                    className="mt-2 min-h-12 w-full border border-line bg-background px-4 font-normal outline-none transition-colors placeholder:text-muted focus:border-foreground"
-                    placeholder="you@example.com"
-                  />
-                </label>
-              </div>
-              <label className="block text-sm font-semibold">
-                Subject
-                <input
-                  name="Subject"
-                  type="text"
-                  required
-                  className="mt-2 min-h-12 w-full border border-line bg-background px-4 font-normal outline-none transition-colors placeholder:text-muted focus:border-foreground"
-                  placeholder="What would you like to discuss?"
-                />
-              </label>
-              <label className="block text-sm font-semibold">
-                Message
-                <textarea
-                  name="Message"
-                  rows={5}
-                  required
-                  className="mt-2 w-full resize-y border border-line bg-background px-4 py-3 font-normal outline-none transition-colors placeholder:text-muted focus:border-foreground"
-                  placeholder="Write your message here..."
-                />
-              </label>
-              <button
-                type="submit"
-                className="inline-flex min-h-12 items-center gap-2 rounded-full bg-foreground px-7 py-3 text-sm font-semibold text-background transition-opacity hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-40"
-              >
-                Send message
-                <ArrowUpRight size={16} />
-              </button>
-            </fieldset>
-            {!contactEmail && (
-              <p className="text-sm text-muted">
-                Share the contact email address to enable message delivery.
-              </p>
-            )}
-          </form>
+          <ContactForm />
         </Reveal>
       </section>
     </>

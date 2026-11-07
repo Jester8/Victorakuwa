@@ -155,9 +155,17 @@ export async function toggleCommentReaction(commentId: number, visitorId: string
 export async function listComments(postId: number, visitorId: string | null) {
   const sql = await db();
   const comments = await sql<
-    { id: number; name: string; body: string; gif_url: string | null; created_at: Date }[]
+    {
+      id: number;
+      name: string;
+      body: string;
+      gif_url: string | null;
+      admin_reply: string | null;
+      admin_replied_at: Date | null;
+      created_at: Date;
+    }[]
   >`
-    select id, name, body, gif_url, created_at from comments
+    select id, name, body, gif_url, admin_reply, admin_replied_at, created_at from comments
     where post_id = ${postId} and not hidden
     order by created_at asc
   `;
@@ -182,6 +190,8 @@ export async function listComments(postId: number, visitorId: string | null) {
     name: c.name,
     body: c.body,
     gifUrl: c.gif_url,
+    adminReply: c.admin_reply,
+    adminRepliedAt: c.admin_replied_at?.toISOString() ?? null,
     createdAt: c.created_at.toISOString(),
     reactions: {
       counts: Object.fromEntries(
@@ -351,6 +361,8 @@ export type AdminComment = {
   name: string;
   body: string;
   gifUrl: string | null;
+  adminReply: string | null;
+  adminRepliedAt: Date | null;
   hidden: boolean;
   createdAt: Date;
   postTitle: string;
@@ -363,11 +375,13 @@ export async function listAllComments(limit = 200): Promise<AdminComment[]> {
   const sql = await db();
   const rows = await sql<
     {
-      id: number; name: string; body: string; gif_url: string | null; hidden: boolean;
-      created_at: Date; title: string; slug: string; reactions: number;
+      id: number; name: string; body: string; gif_url: string | null; admin_reply: string | null;
+      admin_replied_at: Date | null; hidden: boolean; created_at: Date; title: string; slug: string;
+      reactions: number;
     }[]
   >`
-    select c.id, c.name, c.body, c.gif_url, c.hidden, c.created_at, p.title, p.slug,
+    select c.id, c.name, c.body, c.gif_url, c.admin_reply, c.admin_replied_at,
+      c.hidden, c.created_at, p.title, p.slug,
       (select count(*)::int from comment_reactions r where r.comment_id = c.id) as reactions
     from comments c join posts p on p.id = c.post_id
     order by c.created_at desc
@@ -378,6 +392,8 @@ export async function listAllComments(limit = 200): Promise<AdminComment[]> {
     name: r.name,
     body: r.body,
     gifUrl: r.gif_url,
+    adminReply: r.admin_reply,
+    adminRepliedAt: r.admin_replied_at,
     hidden: r.hidden,
     createdAt: r.created_at,
     postTitle: r.title,
@@ -389,6 +405,22 @@ export async function listAllComments(limit = 200): Promise<AdminComment[]> {
 export async function setCommentHidden(id: number, hidden: boolean) {
   const sql = await db();
   await sql`update comments set hidden = ${hidden} where id = ${id}`;
+}
+
+export async function saveCommentReply(id: number, reply: string) {
+  const sql = await db();
+  const [comment] = await sql<{ slug: string }[]>`
+    select p.slug from comments c join posts p on p.id = c.post_id where c.id = ${id}
+  `;
+  if (!comment) return null;
+
+  await sql`
+    update comments set
+      admin_reply = ${reply || null},
+      admin_replied_at = case when ${Boolean(reply)} then now() else null end
+    where id = ${id}
+  `;
+  return comment.slug;
 }
 
 export async function deleteComment(id: number) {

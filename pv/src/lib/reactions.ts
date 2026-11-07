@@ -18,6 +18,7 @@ export type ShareNetwork = (typeof SHARE_NETWORKS)[number];
 
 export const COMMENT_NAME_MAX = 60;
 export const COMMENT_BODY_MAX = 1500;
+export const ADMIN_REPLY_MAX = 2000;
 
 export type ReactionSummary = { counts: Record<string, number>; mine: string[] };
 
@@ -26,6 +27,8 @@ export type PublicComment = {
   name: string;
   body: string;
   gifUrl: string | null;
+  adminReply: string | null;
+  adminRepliedAt: string | null;
   createdAt: string;
   reactions: ReactionSummary;
 };
